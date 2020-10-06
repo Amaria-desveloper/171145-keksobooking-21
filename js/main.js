@@ -1,7 +1,6 @@
 'use strict';
 
 const NUMBER_OF_AVATARS = 8;
-const numberOfSimilarAdvert = NUMBER_OF_AVATARS;
 
 const widthMap = document.querySelector(`.map`)
     .offsetWidth;
@@ -91,37 +90,34 @@ const getAdvert = function () {
 };
 
 
-const getAdverts = function () {
-  let adverts = [];
-  for (let i = 0; i < numberOfSimilarAdvert; i++) {
-    adverts.push(getAdvert(i));
-  }
-  return adverts;
+const createTemplateWithData = function (template, data) {
+  let element = template.cloneNode(true);
+  element.querySelector(`img`).src = data.author.avatar;
+  element.querySelector(`img`).alt = data.offer.title;
+  element.style.left = data.location.x + OFFSET_X + `px`;
+  element.style.top = data.location.y + OFFSET_Y + `px`;
+  return element;
 };
 
+
+const renderElements = function (parent, quantity, template) {
+  for (let i = 0; i < quantity; i++) {
+    let fragment = document.createDocumentFragment();
+    fragment.appendChild(createTemplateWithData(template, getAdvert()));
+    parent.appendChild(fragment);
+  }
+};
+
+
+const numberOfSimilarAdvert = NUMBER_OF_AVATARS;
 const pinMap = document.querySelector(`.map__pins`);
 const pinTemplate = document.querySelector(`#pin`)
     .content
     .querySelector(`.map__pin`);
 
-const createElementsFromTemplate = function (parent, template, data) {
-  let fragment = document.createDocumentFragment();
-  for (let i = 0; i < data.length; i++) {
-    let element = template.cloneNode(true);
-    element.querySelector(`img`).src = data[i].author.avatar;
-    element.querySelector(`img`).alt = data[i].offer.title;
-    element.style.left = data[i].location.x + OFFSET_X + `px`;
-    element.style.top = data[i].location.y + OFFSET_Y + `px`;
-    fragment.appendChild(element);
-  }
-  parent.appendChild(fragment);
-};
-
-
-const renderElements = function () {
-  createElementsFromTemplate(pinMap, pinTemplate, getAdverts());
-};
-
-renderElements();
+renderElements(
+    pinMap,
+    numberOfSimilarAdvert,
+    pinTemplate);
 
 document.querySelector(`.map`).classList.remove(`map--faded`);
