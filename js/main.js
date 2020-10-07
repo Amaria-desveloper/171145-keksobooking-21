@@ -122,8 +122,8 @@ const createElementsFromTemplate = function (template, data) {
     let element = template.cloneNode(true);
     element.querySelector(`img`).src = data[i].author.avatar;
     element.querySelector(`img`).alt = data[i].offer.title;
-    element.style.top = data[i].location.x + (sizeOfElement.Pin.Width / 2) + `px`;
-    element.style.left = data[i].location.y + (sizeOfElement.Pin.Height / 2) + `px`;
+    element.style.left = data[i].location.x + (sizeOfElement.Pin.Width / 2) + `px`;
+    element.style.top = data[i].location.y + (sizeOfElement.Pin.Height / 2) + `px`;
     fragment.appendChild(element);
   }
   pinMap.appendChild(fragment);
