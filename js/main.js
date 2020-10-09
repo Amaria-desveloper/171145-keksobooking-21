@@ -191,6 +191,12 @@ const createCardFromTemplate = function (template, data) {
   return fragment;
 };
 
+const renderData = function (templateForPin, templateForCard, data) {
+  return {
+    pins: createElementsFromTemplate(templateForPin, data),
+    card: createCardFromTemplate(templateForCard, data),
+  };
+};
 
 const pinMap = document.querySelector(`.map__pins`);
 const pinTemplate = document.querySelector(`#pin`)
@@ -198,7 +204,6 @@ const pinTemplate = document.querySelector(`#pin`)
     .querySelector(`.map__pin`);
 const cardTemplate = document.querySelector(`#card`).content.querySelector(`.map__card`);
 
-pinMap.appendChild(createElementsFromTemplate(pinTemplate, getAdverts()));
-pinMap.appendChild(createCardFromTemplate(cardTemplate, getAdverts()));
+pinMap.append(renderData(pinTemplate, cardTemplate, getAdverts()).pins, renderData(pinTemplate, cardTemplate, getAdverts()).card);
 
 document.querySelector(`.map`).classList.remove(`map--faded`);
