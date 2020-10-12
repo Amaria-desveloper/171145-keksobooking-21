@@ -36,7 +36,7 @@ const FEATURES = [
   `parking`,
   `washer`,
   `elevator`,
-  `conditioner`
+  `conditioner`,
 ];
 
 const PHOTOS = [
@@ -54,21 +54,12 @@ const getRandomArrIndex = function (arr) {
   return arr[Math.floor(Math.random() * arr.length)];
 };
 
+
 const getRandomArr = function (arr) {
   let randNum = getRandomInteger(0, arr.length - 1);
   let randomArr = arr.slice(randNum);
   return randomArr;
 };
-
-
-const getAvatars = function () {
-  const avatars = [];
-  for (let i = 0; i < NUMBER_OF_AVATARS; i++) {
-    avatars[i] = `img/avatars/user0` + (1 + i) + `.png`;
-  }
-  return avatars;
-};
-
 
 const getSizeOfElement = function () {
   return {
@@ -80,6 +71,30 @@ const getSizeOfElement = function () {
   };
 };
 let sizeOfElement = getSizeOfElement();
+
+
+const getAvatars = function () {
+  const avatars = [];
+  for (let i = 0; i < NUMBER_OF_AVATARS; i++) {
+    avatars[i] = `img/avatars/user0` + (1 + i) + `.png`;
+  }
+  return avatars;
+};
+
+
+const findElement = function (value) {
+  let element = TYPES.indexOf(value, 0);
+  if (element === 0) {
+    return `Дворец`;
+  } else if (element === 1) {
+    return `Квартира`;
+  } else if (element === 2) {
+    return `Дом`;
+  } else if (element === 3) {
+    return `Бунгало`;
+  }
+  return false;
+};
 
 
 const getAdvert = function () {
@@ -116,7 +131,7 @@ const getAdverts = function () {
 };
 
 
-const createElementsFromTemplate = function (template, data) {
+const createPinsFromTemplate = function (template, data) {
   let fragment = document.createDocumentFragment();
   for (let i = 0; i < data.length; i++) {
     let element = template.cloneNode(true);
@@ -137,44 +152,17 @@ const createCardFromTemplate = function (template, data) {
   element.querySelector(`.popup__title`).textContent = data[0].offer.title;
   element.querySelector(`.popup__text--address`).setAttribute(`style`, `visibility: hidden;`);
   element.querySelector(`.popup__text--price`).textContent = data[0].offer.price + `₽/ночь`;
-
-  if (data[0].offer.type === `flat`) {
-    element.querySelector(`.popup__type`).textContent = `Квартира`;
-  }
-  if (data[0].offer.type === `bungalow`) {
-    element.querySelector(`.popup__type`).textContent = `Бунгало`;
-  }
-  if (data[0].offer.type === `house`) {
-    element.querySelector(`.popup__type`).textContent = `Дом`;
-  }
-  if (data[0].offer.type === `palace`) {
-    element.querySelector(`.popup__type`).textContent = `Дворец`;
-  }
-
+  element.querySelector(`.popup__type`).textContent = findElement(data[0].offer.type);
   element.querySelector(`.popup__text--capacity`).textContent = `Комнат: ` + data[0].offer.rooms + `, ` + data[0].offer.guests;
   element .querySelector(`.popup__text--time`).textContent = `Заезд после ` + data[0].offer.checkin + `, выезд до ` + data[0].offer.checkout;
 
-  if (data[0].offer.features.includes(`wifi`, 0) === false) {
-    element.querySelector(`.popup__feature--wifi`).remove();
-  }
-  if (data[0].offer.features.includes(`dishwasher`, 0) === false) {
-    element.querySelector(`.popup__feature--dishwasher`).remove();
-  }
-  if (data[0].offer.features.includes(`parking`, 0) === false) {
-    element.querySelector(`.popup__feature--parking`).remove();
-  }
-  if (data[0].offer.features.includes(`washer`, 0) === false) {
-    element.querySelector(`.popup__feature--washer`).remove();
-  }
-  if (data[0].offer.features.includes(`elevator`, 0) === false) {
-    element.querySelector(`.popup__feature--elevator`).remove();
-  }
-  if (data[0].offer.features.includes(`conditioner`, 0) === false) {
-    element.querySelector(`.popup__feature--conditioner`).remove();
+  for (let i = 0; i < FEATURES.length; i++) {
+    if (data[0].offer.features.includes(FEATURES[i], 0) === false) {
+      element.querySelector(`.popup__feature`).remove();
+    }
   }
 
   element.querySelector(`.popup__description`).textContent = data[0].offer.description;
-
   element.querySelector(`.popup__photo`).src = data[0].offer.photos[0];
   if (data[0].offer.photos.length > 1) {
     for (let i = 1; i < data[0].offer.photos.length; i++) {
@@ -191,19 +179,15 @@ const createCardFromTemplate = function (template, data) {
   return fragment;
 };
 
-const renderData = function (templateForPin, templateForCard, data) {
-  return {
-    pins: createElementsFromTemplate(templateForPin, data),
-    card: createCardFromTemplate(templateForCard, data),
-  };
-};
-
+const adverts = getAdverts();
 const pinMap = document.querySelector(`.map__pins`);
 const pinTemplate = document.querySelector(`#pin`)
     .content
     .querySelector(`.map__pin`);
 const cardTemplate = document.querySelector(`#card`).content.querySelector(`.map__card`);
 
-pinMap.append(renderData(pinTemplate, cardTemplate, getAdverts()).pins, renderData(pinTemplate, cardTemplate, getAdverts()).card);
+
+pinMap.append(createPinsFromTemplate(pinTemplate, adverts));
+pinMap.append(createCardFromTemplate(cardTemplate, adverts));
 
 document.querySelector(`.map`).classList.remove(`map--faded`);
