@@ -84,16 +84,25 @@ const getAvatars = function () {
 
 const findElement = function (value) {
   let element = TYPES.indexOf(value, 0);
-  if (element === 0) {
-    return `Дворец`;
-  } else if (element === 1) {
-    return `Квартира`;
-  } else if (element === 2) {
-    return `Дом`;
-  } else if (element === 3) {
-    return `Бунгало`;
+  let newValue = ` `;
+  switch (element) {
+    case 0:
+      newValue = `Дворец`;
+      break;
+    case 1:
+      newValue = `Квартира`;
+      break;
+    case 2:
+      newValue = `Дом`;
+      break;
+    case 3:
+      newValue = `Бунгало`;
+      break;
+
+    default:
+      return value;
   }
-  return false;
+  return newValue;
 };
 
 
