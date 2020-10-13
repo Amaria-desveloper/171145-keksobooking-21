@@ -2,12 +2,6 @@
 
 const NUMBER_OF_AVATARS = 8;
 
-/*
-
-
-const OFFSET_X = widthPin / 2;
-const OFFSET_Y = heightPin / 2;
-*/
 const TYPES = [
   `palace`,
   `flat`,
@@ -61,16 +55,14 @@ const getRandomArr = function (arr) {
   return randomArr;
 };
 
-const getSizeOfElement = function () {
-  return {
-    Pin: {
-      Width: document.querySelector(`.map__pin`).offsetWidth,
-      Height: document.querySelector(`.map__pin`).offsetHeight
+const sizeOfElement = {
+    getWidth: function (element) {
+      return element.offsetWidth
     },
-    WidthMap: document.querySelector(`.map`).offsetWidth,
-  };
+    getHeight: function (element) {
+      return element.offsetHeight
+    }
 };
-let sizeOfElement = getSizeOfElement();
 
 
 const getAvatars = function () {
@@ -112,7 +104,7 @@ const getAdvert = function () {
       "photos": getRandomArr(PHOTOS),
     },
     "location": {
-      "x": getRandomInteger(0, (sizeOfElement.WidthMap - sizeOfElement.Pin.Width)),
+      "x": getRandomInteger(0, (sizeOfElement.getWidth(document.querySelector(`.map`)) - sizeOfElement.getWidth(document.querySelector(`.map__pin`)))),
       "y": getRandomInteger(130, 630),
     }
   };
@@ -133,8 +125,8 @@ const createPinsFromTemplate = function (template, data) {
     let element = template.cloneNode(true);
     element.querySelector(`img`).src = data[i].author.avatar;
     element.querySelector(`img`).alt = data[i].offer.title;
-    element.style.left = data[i].location.x + (sizeOfElement.Pin.Width / 2) + `px`;
-    element.style.top = data[i].location.y + (sizeOfElement.Pin.Height / 2) + `px`;
+    element.style.left = data[i].location.x + sizeOfElement.getWidth(document.querySelector(`.map__pin`)) / 2 + `px`;
+    element.style.top = data[i].location.y + sizeOfElement.getHeight(document.querySelector(`.map__pin`)) / 2 + `px`;
     fragment.appendChild(element);
   }
   return fragment;
@@ -183,7 +175,62 @@ const pinTemplate = document.querySelector(`#pin`)
 const cardTemplate = document.querySelector(`#card`).content.querySelector(`.map__card`);
 
 
-pinMap.append(createPinsFromTemplate(pinTemplate, adverts));
-pinMap.append(createCardFromTemplate(cardTemplate, adverts));
 
-document.querySelector(`.map`).classList.remove(`map--faded`);
+//pinMap.append(createCardFromTemplate(cardTemplate, adverts));
+
+
+const makeDisabled = {
+    Set: function (element) {
+      for (let i = 0; i < element.length; i++) {
+        element[i].setAttribute(`disabled`, true);
+      }
+     },
+    Remove: function (element) {
+      for (let i = 0; i < element.length; i++) {
+        element[i].removeAttribute(`disabled`, true);
+      }
+    }
+  };
+
+
+const setActive = function () {
+  document.querySelector(`.map`).classList.remove(`map--faded`);
+  document.querySelector(`.ad-form`).classList.remove(`ad-form--disabled`);
+  pinMap.append(createPinsFromTemplate(pinTemplate, adverts));
+  makeDisabled.Remove(document.querySelectorAll(`.ad-form fieldset`));
+};
+
+
+const setInactive = function () {
+  document.querySelector(`.map`).classList.add(`map--faded`);
+  document.querySelector(`.ad-form`).classList.add(`ad-form--disabled`);
+  makeDisabled.Set(document.querySelectorAll(`.ad-form fieldset`));
+  makeDisabled.Set(document.querySelectorAll(`.map__filters fieldset`));
+  makeDisabled.Set(document.querySelectorAll(`.map__filters select`));
+};
+
+
+const makeWork = function () {
+  const mapPinMain = document.querySelector(`.map__pin--main`);
+
+  mapPinMain.addEventListener(`mousedown`, function(evt) {
+    if (evt.button === 0 ||  evt.key === `Enter`){
+      evt.preventDefault();
+      setActive();
+      console.log(document.querySelector(`.map__pin`));
+  console.log(sizeOfElement.getWidth(document.querySelector(`.map__pin:not(.map__pin--main`)));
+    }
+  });
+
+  mapPinMain.addEventListener(`keydown`, function(evt) {
+    if (evt.key === `Enter`) {
+      setActive();
+    }
+  });
+}
+
+
+setInactive();
+makeWork();
+
+
