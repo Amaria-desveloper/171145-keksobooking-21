@@ -10,9 +10,9 @@ const TYPES = [
 ];
 
 const CAPACITY = [
-  `для 3 гостей`,
-  `для 2 гостей`,
   `для 1 гостя`,
+  `для 2 гостей`,
+  `для 3 гостей`,
   `не для гостей`
 ];
 
@@ -95,7 +95,7 @@ const getAdvert = function () {
       "address": `0, 0`,
       "price": Math.round(getRandomInteger(1000, 5000) / 100) * 100,
       "type": getRandomArrIndex(TYPES),
-      "rooms": getRandomInteger(1, 5),
+      "rooms": getRandomInteger(1, 3),
       "guests": getRandomArrIndex(CAPACITY),
       "checkin": getRandomArrIndex(TIME_IN),
       "checkout": getRandomArrIndex(TIME_OUT),
@@ -178,6 +178,82 @@ const cardTemplate = document.querySelector(`#card`).content.querySelector(`.map
 
 //pinMap.append(createCardFromTemplate(cardTemplate, adverts));
 
+const positionOfElement = {
+    getTop: function (element) {
+      return parseInt(element.style.top);
+    },
+    getLeft: function (element) {
+      return parseInt(element.style.left);
+    }
+};
+
+
+const getPositionOfElement = function (element) {
+    let positionX =
+        positionOfElement.getTop(element) + sizeOfElement.getHeight(element);
+    let positionY =
+      positionOfElement.getLeft(element) + (sizeOfElement.getWidth(element) / 2);
+
+    return [positionX, ` ` + positionY];
+};
+
+
+const setAddressValue = function (inputElement, newValueFrom) {
+  let newValue = newValueFrom;
+  inputElement.value = newValue;
+};
+
+
+  const getValue = function (selectElement) {
+    let length = selectElement.options.length;
+    let index = selectElement.options.selectedIndex;
+    switch (index) {
+      case 0 : return 0;
+      case 1 : return 1;
+      case 2 : return 2;
+      case 3 : return 3;
+      default: ``;
+    }
+  };
+
+  const setCapacityValue = function (selectElement, setElementValue) {
+    if (getValue(selectElement) == 0) {
+      while (setElementValue.options.length > 1) {
+        setElementValue.options.remove([setElementValue.options.length] - 1);
+      }
+    }
+
+    if (getValue(selectElement) == 1) {
+      while (setElementValue.options.length > 2) {
+        setElementValue.options.remove([setElementValue.options.length] - 1);
+      }
+    }
+
+    if (getValue(selectElement) == 2) {
+      while (setElementValue.options.length > 3) {
+        setElementValue.options.remove([setElementValue.options.length] - 1);
+      }
+    }
+
+    if (getValue(selectElement) == 3) {
+      while (setElementValue.options.length > 1) {
+        setElementValue.options.remove([setElementValue.options] + 1);
+      }
+    }
+  };
+
+const roomNumberChangeHandler = function (evt) {
+  let selectedValue = evt.target[evt.target.selectedIndex];
+
+
+  console.log(selectedValue);
+  //console.log(selectedValue.setAttribute(`selected`, true));
+
+};
+
+let form = document.querySelector(`.ad-form`);
+form.addEventListener('change', roomNumberChangeHandler);
+
 
 const makeDisabled = {
     Set: function (element) {
@@ -191,7 +267,6 @@ const makeDisabled = {
       }
     }
   };
-
 
 const setActive = function () {
   document.querySelector(`.map`).classList.remove(`map--faded`);
@@ -214,19 +289,23 @@ const makeWork = function () {
   const mapPinMain = document.querySelector(`.map__pin--main`);
 
   mapPinMain.addEventListener(`mousedown`, function(evt) {
-    if (evt.button === 0 ||  evt.key === `Enter`){
+    if (evt.button === 0) {
       evt.preventDefault();
       setActive();
-      console.log(document.querySelector(`.map__pin`));
-  console.log(sizeOfElement.getWidth(document.querySelector(`.map__pin:not(.map__pin--main`)));
+      setAddressValue(document.querySelector(`#address`), getPositionOfElement(document.querySelector(`.map__pin--main`)));
+      setCapacityValue(document.querySelector(`#room_number`), document.querySelector(`#capacity`))
     }
   });
 
   mapPinMain.addEventListener(`keydown`, function(evt) {
     if (evt.key === `Enter`) {
       setActive();
+      setAddressValue(document.querySelector(`#address`), getPositionOfElement(document.querySelector(`.map__pin--main`)));
+      setCapacityValue(document.querySelector(`#room_number`), document.querySelector(`#capacity`))
     }
   });
+
+
 }
 
 
