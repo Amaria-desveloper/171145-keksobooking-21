@@ -174,9 +174,14 @@ const pinTemplate = document.querySelector(`#pin`)
     .querySelector(`.map__pin`);
 const cardTemplate = document.querySelector(`#card`).content.querySelector(`.map__card`);
 
+/* До следующего задания pinMap.append(createCardFromTemplate(cardTemplate, adverts)); */
 
 
-//pinMap.append(createCardFromTemplate(cardTemplate, adverts));
+/* module4 - task1
+1. disabled
+2. активация страницы
+3. заполнения поля адреса
+4. валидация: гости = кол-во комнат*/
 
 const positionOfElement = {
     getTop: function (element) {
@@ -204,55 +209,41 @@ const setAddressValue = function (inputElement, newValueFrom) {
 };
 
 
-  const getValue = function (selectElement) {
-    let length = selectElement.options.length;
-    let index = selectElement.options.selectedIndex;
-    switch (index) {
-      case 0 : return 0;
-      case 1 : return 1;
-      case 2 : return 2;
-      case 3 : return 3;
-      default: ``;
-    }
+
+
+  const setCapacityValue = function (selectedIndex, setElementValue) {
+    for (let i = 0; i < setElementValue.length; i++) {
+        setElementValue[i].setAttribute(`style`, `display: none`);
+      }
+
+      switch(selectedIndex) {
+        case 0:  setElementValue[0].setAttribute(`style`, `display: auto`);
+        break;
+
+        case 1: for (let i = 0; i < 2; i++) {
+          setElementValue[i].setAttribute(`style`, `display: auto`);
+        }
+        break;
+
+        case 2: for (let i = 0; i < 3; i++) {
+          setElementValue[i].setAttribute(`style`, `display: auto`);
+        }
+        break;
+
+        case 3: setElementValue[3].setAttribute(`style`, `display: auto`);
+        break;
+      }
   };
 
-  const setCapacityValue = function (selectElement, setElementValue) {
-    if (getValue(selectElement) == 0) {
-      while (setElementValue.options.length > 1) {
-        setElementValue.options.remove([setElementValue.options.length] - 1);
-      }
-    }
-
-    if (getValue(selectElement) == 1) {
-      while (setElementValue.options.length > 2) {
-        setElementValue.options.remove([setElementValue.options.length] - 1);
-      }
-    }
-
-    if (getValue(selectElement) == 2) {
-      while (setElementValue.options.length > 3) {
-        setElementValue.options.remove([setElementValue.options.length] - 1);
-      }
-    }
-
-    if (getValue(selectElement) == 3) {
-      while (setElementValue.options.length > 1) {
-        setElementValue.options.remove([setElementValue.options] + 1);
-      }
-    }
-  };
 
 const roomNumberChangeHandler = function (evt) {
-  let selectedValue = evt.target[evt.target.selectedIndex];
-
-
-  console.log(selectedValue);
-  //console.log(selectedValue.setAttribute(`selected`, true));
-
+  let selectedIndex = evt.target.selectedIndex;
+  console.log(selectedIndex);
+  setCapacityValue(selectedIndex, document.querySelector(`#capacity`));
 };
+document.querySelector(`#room_number`).addEventListener('change', roomNumberChangeHandler);
 
-let form = document.querySelector(`.ad-form`);
-form.addEventListener('change', roomNumberChangeHandler);
+
 
 
 const makeDisabled = {
@@ -293,7 +284,6 @@ const makeWork = function () {
       evt.preventDefault();
       setActive();
       setAddressValue(document.querySelector(`#address`), getPositionOfElement(document.querySelector(`.map__pin--main`)));
-      setCapacityValue(document.querySelector(`#room_number`), document.querySelector(`#capacity`))
     }
   });
 
@@ -301,13 +291,11 @@ const makeWork = function () {
     if (evt.key === `Enter`) {
       setActive();
       setAddressValue(document.querySelector(`#address`), getPositionOfElement(document.querySelector(`.map__pin--main`)));
-      setCapacityValue(document.querySelector(`#room_number`), document.querySelector(`#capacity`))
     }
   });
 
 
 }
-
 
 setInactive();
 makeWork();
