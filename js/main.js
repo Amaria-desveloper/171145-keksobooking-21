@@ -56,12 +56,12 @@ const getRandomArr = function (arr) {
 };
 
 const sizeOfElement = {
-    getWidth: function (element) {
-      return element.offsetWidth
-    },
-    getHeight: function (element) {
-      return element.offsetHeight
-    }
+  "getWidth": function (element) {
+    return element.offsetWidth;
+  },
+  "getHeight": function (element) {
+    return element.offsetHeight;
+  }
 };
 
 
@@ -73,7 +73,7 @@ const getAvatars = function () {
   return avatars;
 };
 
-
+/* До следующего задания
 const findElement = function (value) {
   switch (value) {
     case `palace`: return `Дворец`;
@@ -83,7 +83,7 @@ const findElement = function (value) {
     default: return ``;
   }
 };
-
+*/
 
 const getAdvert = function () {
   return {
@@ -132,6 +132,7 @@ const createPinsFromTemplate = function (template, data) {
   return fragment;
 };
 
+/* До следующего задания
 const createCardFromTemplate = function (template, data) {
   let fragment = document.createDocumentFragment();
   let element = template.cloneNode(true);
@@ -166,15 +167,18 @@ const createCardFromTemplate = function (template, data) {
   fragment.appendChild(element);
   return fragment;
 };
+*/
 
 const adverts = getAdverts();
 const pinMap = document.querySelector(`.map__pins`);
 const pinTemplate = document.querySelector(`#pin`)
     .content
     .querySelector(`.map__pin`);
-const cardTemplate = document.querySelector(`#card`).content.querySelector(`.map__card`);
 
-/* До следующего задания pinMap.append(createCardFromTemplate(cardTemplate, adverts)); */
+
+/* До следующего задания
+const cardTemplate = document.querySelector(`#card`).content.querySelector(`.map__card`);
+pinMap.append(createCardFromTemplate(cardTemplate, adverts)); */
 
 
 /* module4 - task1
@@ -184,24 +188,22 @@ const cardTemplate = document.querySelector(`#card`).content.querySelector(`.map
 4. валидация: гости = кол-во комнат*/
 
 const positionOfElement = {
-    getTop: function (element) {
-      return parseInt(element.style.top);
-    },
-    getLeft: function (element) {
-      return parseInt(element.style.left);
-    }
+  "getTop": function (element) {
+    return parseInt(element.style.top, 10);
+  },
+  "getLeft": function (element) {
+    return parseInt(element.style.left, 10);
+  }
 };
-
 
 const getPositionOfElement = function (element) {
-    let positionX =
-        positionOfElement.getTop(element) + sizeOfElement.getHeight(element);
-    let positionY =
-      positionOfElement.getLeft(element) + (sizeOfElement.getWidth(element) / 2);
+  let positionX =
+      positionOfElement.getTop(element) + sizeOfElement.getHeight(element);
+  let positionY =
+    positionOfElement.getLeft(element) + (sizeOfElement.getWidth(element) / 2);
 
-    return [positionX, ` ` + positionY];
+  return [positionX, ` ` + positionY];
 };
-
 
 const setAddressValue = function (inputElement, newValueFrom) {
   let newValue = newValueFrom;
@@ -209,77 +211,72 @@ const setAddressValue = function (inputElement, newValueFrom) {
 };
 
 
+const setCapacityValue = function (selectedIndex, setElementValue) {
+  for (let i = 0; i < setElementValue.length; i++) {
+    setElementValue[i].setAttribute(`style`, `display: none`);
+  }
 
+  switch (selectedIndex) {
+    case 0: setElementValue[0].setAttribute(`style`, `display: auto`);
+      break;
 
-  const setCapacityValue = function (selectedIndex, setElementValue) {
-    for (let i = 0; i < setElementValue.length; i++) {
-        setElementValue[i].setAttribute(`style`, `display: none`);
+    case 1:
+      for (let i = 0; i < 2; i++) {
+        setElementValue[i].setAttribute(`style`, `display: auto`);
       }
+      break;
 
-      switch(selectedIndex) {
-        case 0:  setElementValue[0].setAttribute(`style`, `display: auto`);
-        break;
+    case 2: for (let i = 0; i < 3; i++) {
+      setElementValue[i].setAttribute(`style`, `display: auto`);
+    }
+      break;
 
-        case 1: for (let i = 0; i < 2; i++) {
-          setElementValue[i].setAttribute(`style`, `display: auto`);
-        }
-        break;
-
-        case 2: for (let i = 0; i < 3; i++) {
-          setElementValue[i].setAttribute(`style`, `display: auto`);
-        }
-        break;
-
-        case 3: setElementValue[3].setAttribute(`style`, `display: auto`);
-        break;
-      }
-  };
+    case 3: setElementValue[3].setAttribute(`style`, `display: auto`);
+      break;
+  }
+};
 
 
 const roomNumberChangeHandler = function (evt) {
-  let selectedIndex = evt.target.selectedIndex;
-  console.log(selectedIndex);
-  setCapacityValue(selectedIndex, document.querySelector(`#capacity`));
+  setCapacityValue((evt.target.selectedIndex), document.querySelector(`#capacity`));
 };
-document.querySelector(`#room_number`).addEventListener('change', roomNumberChangeHandler);
-
-
+document.querySelector(`#room_number`).addEventListener(`change`, roomNumberChangeHandler);
 
 
 const makeDisabled = {
-    Set: function (element) {
-      for (let i = 0; i < element.length; i++) {
-        element[i].setAttribute(`disabled`, true);
-      }
-     },
-    Remove: function (element) {
-      for (let i = 0; i < element.length; i++) {
-        element[i].removeAttribute(`disabled`, true);
-      }
+  "set": function (element) {
+    for (let i = 0; i < element.length; i++) {
+      element[i].setAttribute(`disabled`, true);
     }
-  };
+  },
+  "remove": function (element) {
+    for (let i = 0; i < element.length; i++) {
+      element[i].removeAttribute(`disabled`, true);
+    }
+  }
+};
 
 const setActive = function () {
   document.querySelector(`.map`).classList.remove(`map--faded`);
   document.querySelector(`.ad-form`).classList.remove(`ad-form--disabled`);
   pinMap.append(createPinsFromTemplate(pinTemplate, adverts));
-  makeDisabled.Remove(document.querySelectorAll(`.ad-form fieldset`));
+  makeDisabled.remove(document.querySelectorAll(`.ad-form fieldset`));
 };
 
 
 const setInactive = function () {
   document.querySelector(`.map`).classList.add(`map--faded`);
   document.querySelector(`.ad-form`).classList.add(`ad-form--disabled`);
-  makeDisabled.Set(document.querySelectorAll(`.ad-form fieldset`));
-  makeDisabled.Set(document.querySelectorAll(`.map__filters fieldset`));
-  makeDisabled.Set(document.querySelectorAll(`.map__filters select`));
+  makeDisabled.set(document.querySelectorAll(`.ad-form fieldset`));
+  makeDisabled.set(document.querySelectorAll(`.map__filters fieldset`));
+  makeDisabled.set(document.querySelectorAll(`.map__filters select`));
 };
 
 
 const makeWork = function () {
   const mapPinMain = document.querySelector(`.map__pin--main`);
 
-  mapPinMain.addEventListener(`mousedown`, function(evt) {
+  mapPinMain.addEventListener(`mousedown`, function (evt) {
     if (evt.button === 0) {
       evt.preventDefault();
       setActive();
@@ -287,7 +284,7 @@ const makeWork = function () {
     }
   });
 
-  mapPinMain.addEventListener(`keydown`, function(evt) {
+  mapPinMain.addEventListener(`keydown`, function (evt) {
     if (evt.key === `Enter`) {
       setActive();
       setAddressValue(document.querySelector(`#address`), getPositionOfElement(document.querySelector(`.map__pin--main`)));
@@ -295,7 +292,7 @@ const makeWork = function () {
   });
 
 
-}
+};
 
 setInactive();
 makeWork();
