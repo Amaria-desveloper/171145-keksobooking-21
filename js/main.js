@@ -39,7 +39,7 @@ const PHOTOS = [
   `http://o0.github.io/assets/images/tokyo/hotel3.jpg`
 ];
 
-
+/* случайности */
 const getRandomInteger = function (min, max) {
   return Math.floor(min + Math.random() * (max + 1 - min));
 };
@@ -55,6 +55,9 @@ const getRandomArr = function (arr) {
   return randomArr;
 };
 
+
+/* найти размер элемента
+  задать сдвиг на основе размеров */
 const sizeOfElement = {
   "getWidth": function (element) {
     return element.offsetWidth;
@@ -64,7 +67,15 @@ const sizeOfElement = {
   }
 };
 
+const getOffset = function (element) {
+  return {
+    x: parseInt((sizeOfElement.getWidth(element) / 2), 10),
+    y: parseInt((sizeOfElement.getHeight(element) / 2), 10)
+  };
+};
 
+
+/* выбор случайного аватара */
 const getAvatars = function () {
   const avatars = [];
   for (let i = 0; i < NUMBER_OF_AVATARS; i++) {
@@ -72,6 +83,7 @@ const getAvatars = function () {
   }
   return avatars;
 };
+
 
 /* До следующего задания
 const findElement = function (value) {
@@ -85,7 +97,9 @@ const findElement = function (value) {
 };
 */
 
-const getAdvert = function () {
+
+/* создание одного случайного объявления */
+const getAdvert = function (map, element) {
   return {
     "author": {
       "avatar": getRandomArrIndex(getAvatars())
@@ -104,33 +118,37 @@ const getAdvert = function () {
       "photos": getRandomArr(PHOTOS),
     },
     "location": {
-      "x": getRandomInteger(0, (sizeOfElement.getWidth(document.querySelector(`.map`)) - sizeOfElement.getWidth(document.querySelector(`.map__pin`)))),
+      "x": getRandomInteger(0, (map - element)),
       "y": getRandomInteger(130, 630),
     }
   };
 };
 
+
+/* создание множества случайных объявлений */
 const getAdverts = function () {
   let adverts = [];
   for (let i = 0; i < NUMBER_OF_AVATARS; i++) {
-    adverts.push(getAdvert(i));
+    adverts.push(getAdvert(sizeOfElement.getWidth(document.querySelector(`.map`)), sizeOfElement.getWidth(document.querySelector(`.map__pin`))));
   }
   return adverts;
 };
 
 
-const createPinsFromTemplate = function (template, data) {
+/* создание отметки */
+const createPinsFromTemplate = function (template, data, offset) {
   let fragment = document.createDocumentFragment();
   for (let i = 0; i < data.length; i++) {
     let element = template.cloneNode(true);
     element.querySelector(`img`).src = data[i].author.avatar;
     element.querySelector(`img`).alt = data[i].offer.title;
-    element.style.left = data[i].location.x + sizeOfElement.getWidth(document.querySelector(`.map__pin`)) / 2 + `px`;
-    element.style.top = data[i].location.y + sizeOfElement.getHeight(document.querySelector(`.map__pin`)) / 2 + `px`;
+    element.style.left = data[i].location.x + offset.x + `px`;
+    element.style.top = data[i].location.y + offset.y + `px`;
     fragment.appendChild(element);
   }
   return fragment;
 };
+
 
 /* До следующего задания
 const createCardFromTemplate = function (template, data) {
@@ -169,12 +187,12 @@ const createCardFromTemplate = function (template, data) {
 };
 */
 
+
 const adverts = getAdverts();
 const pinMap = document.querySelector(`.map__pins`);
 const pinTemplate = document.querySelector(`#pin`)
     .content
     .querySelector(`.map__pin`);
-
 
 /* До следующего задания
 const cardTemplate = document.querySelector(`#card`).content.querySelector(`.map__card`);
@@ -187,6 +205,7 @@ pinMap.append(createCardFromTemplate(cardTemplate, adverts)); */
 3. заполнения поля адреса
 4. валидация: гости = кол-во комнат*/
 
+/* найти координаты метки */
 const positionOfElement = {
   "getTop": function (element) {
     return parseInt(element.style.top, 10);
@@ -196,6 +215,7 @@ const positionOfElement = {
   }
 };
 
+/* найти координаты метки куда указывает острый конец метки */
 const getPositionOfElement = function (element) {
   let positionX =
       positionOfElement.getTop(element) + sizeOfElement.getHeight(element);
@@ -205,44 +225,42 @@ const getPositionOfElement = function (element) {
   return [positionX, ` ` + positionY];
 };
 
+/* установи адрес */
 const setAddressValue = function (inputElement, newValueFrom) {
   let newValue = newValueFrom;
   inputElement.value = newValue;
 };
 
+/* кол-во комнат <-> кол-во гостей */
+const setCapacityValue = function (selectedValue, selectedElement, setElementValue) {
+  let mapDepenceRoomGuests = {
+    1: [1],
+    2: [1, 2],
+    3: [1, 2, 3],
+    100: [0]
+  };
 
-const setCapacityValue = function (selectedIndex, setElementValue) {
+  setElementValue.disabled = false;
+
+  selectedElement.querySelector(`option[value="` + [selectedValue] + `"]`).setAttribute(`selected`, `true`);
+  setElementValue.value = `default`;
+
   for (let i = 0; i < setElementValue.length; i++) {
     setElementValue[i].setAttribute(`style`, `display: none`);
   }
 
-  switch (selectedIndex) {
-    case 0: setElementValue[0].setAttribute(`style`, `display: auto`);
-      break;
-
-    case 1:
-      for (let i = 0; i < 2; i++) {
-        setElementValue[i].setAttribute(`style`, `display: auto`);
-      }
-      break;
-
-    case 2: for (let i = 0; i < 3; i++) {
-      setElementValue[i].setAttribute(`style`, `display: auto`);
-    }
-      break;
-
-    case 3: setElementValue[3].setAttribute(`style`, `display: auto`);
-      break;
-  }
+  mapDepenceRoomGuests[selectedValue].forEach(function (item) {
+    setElementValue.querySelector(`option[value="` + item + `"]`).setAttribute(`style`, `display: auto`);
+  });
 };
 
-
 const roomNumberChangeHandler = function (evt) {
-  setCapacityValue((evt.target.selectedIndex), document.querySelector(`#capacity`));
+  setCapacityValue((evt.target.value), evt.target, document.querySelector(`#capacity`));
 };
 document.querySelector(`#room_number`).addEventListener(`change`, roomNumberChangeHandler);
 
 
+/* активация */
 const makeDisabled = {
   "set": function (element) {
     for (let i = 0; i < element.length; i++) {
@@ -259,7 +277,7 @@ const makeDisabled = {
 const setActive = function () {
   document.querySelector(`.map`).classList.remove(`map--faded`);
   document.querySelector(`.ad-form`).classList.remove(`ad-form--disabled`);
-  pinMap.append(createPinsFromTemplate(pinTemplate, adverts));
+  pinMap.append(createPinsFromTemplate(pinTemplate, adverts, getOffset(document.querySelector(`.map__pin`))));
   makeDisabled.remove(document.querySelectorAll(`.ad-form fieldset`));
 };
 
@@ -275,23 +293,20 @@ const setInactive = function () {
 
 const makeWork = function () {
   const mapPinMain = document.querySelector(`.map__pin--main`);
+  setAddressValue(document.querySelector(`#address`), getPositionOfElement(document.querySelector(`.map__pin--main`)));
 
   mapPinMain.addEventListener(`mousedown`, function (evt) {
     if (evt.button === 0) {
       evt.preventDefault();
       setActive();
-      setAddressValue(document.querySelector(`#address`), getPositionOfElement(document.querySelector(`.map__pin--main`)));
     }
   });
 
   mapPinMain.addEventListener(`keydown`, function (evt) {
     if (evt.key === `Enter`) {
       setActive();
-      setAddressValue(document.querySelector(`#address`), getPositionOfElement(document.querySelector(`.map__pin--main`)));
     }
   });
-
-
 };
 
 setInactive();
