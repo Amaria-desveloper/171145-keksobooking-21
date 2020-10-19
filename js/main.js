@@ -39,6 +39,14 @@ const PHOTOS = [
   `http://o0.github.io/assets/images/tokyo/hotel3.jpg`
 ];
 
+const DEPENCE_ROOM_GUESTS = {
+  1: [1],
+  2: [1, 2],
+  3: [1, 2, 3],
+  100: [0]
+};
+
+
 /* случайности */
 const getRandomInteger = function (min, max) {
   return Math.floor(min + Math.random() * (max + 1 - min));
@@ -232,32 +240,48 @@ const setAddressValue = function (inputElement, newValueFrom) {
 };
 
 /* кол-во комнат <-> кол-во гостей */
-const setCapacityValue = function (selectedValue, selectedElement, setElementValue) {
-  let mapDepenceRoomGuests = {
-    1: [1],
-    2: [1, 2],
-    3: [1, 2, 3],
-    100: [0]
+const installDefaultOption = function () {
+  for (let i = 1; i < document.querySelector(`#capacity`).length; i++) {
+    document.querySelector(`#capacity`)[i].setAttribute(`style`, `display: none`);
+  }
+};
+
+const makeCheckField = function (condition, message, element) {
+  const error = function () {
+    element.setCustomValidity(message);
+    element.reportValidity();
+  };
+  const success = function () {
+    element.setCustomValidity(``);
   };
 
-  setElementValue.disabled = false;
+  if (condition) {
+    success(message);
+  } else {
+    error(message);
+  }
+};
 
-  selectedElement.querySelector(`option[value="` + [selectedValue] + `"]`).setAttribute(`selected`, `true`);
-  setElementValue.value = `default`;
+const setCapacityValue = function (selectedValue, selectedElement, setElement) {
+  makeCheckField((DEPENCE_ROOM_GUESTS[selectedValue].includes(Number(setElement.value), 0)), `выберите допустимое количество гостей`, setElement);
 
-  for (let i = 0; i < setElementValue.length; i++) {
-    setElementValue[i].setAttribute(`style`, `display: none`);
+  let selectedElementValue = selectedElement.querySelector(`option[value="` + [selectedValue] + `"]`);
+  selectedElementValue.setAttribute(`selected`, `true`);
+
+  for (let i = 0; i < setElement.length; i++) {
+    setElement[i].setAttribute(`style`, `display: none`);
   }
 
-  mapDepenceRoomGuests[selectedValue].forEach(function (item) {
-    setElementValue.querySelector(`option[value="` + item + `"]`).setAttribute(`style`, `display: auto`);
+  DEPENCE_ROOM_GUESTS[selectedValue].forEach(function (item) {
+    setElement.querySelector(`option[value="` + item + `"]`).setAttribute(`style`, `display: auto`);
   });
-};
 
-const roomNumberChangeHandler = function (evt) {
-  setCapacityValue((evt.target.value), evt.target, document.querySelector(`#capacity`));
+  const capacityChangeHandler = function (evt) {
+    evt.target.querySelector(`option[value="` + [evt.target.value] + `"]`).setAttribute(`selected`, `true`);
+    setCapacityValue(selectedValue, selectedElement, setElement);
+  };
+  document.querySelector(`#capacity`).addEventListener(`change`, capacityChangeHandler);
 };
-document.querySelector(`#room_number`).addEventListener(`change`, roomNumberChangeHandler);
 
 
 /* активация */
@@ -279,6 +303,11 @@ const setActive = function () {
   document.querySelector(`.ad-form`).classList.remove(`ad-form--disabled`);
   pinMap.append(createPinsFromTemplate(pinTemplate, adverts, getOffset(document.querySelector(`.map__pin`))));
   makeDisabled.remove(document.querySelectorAll(`.ad-form fieldset`));
+  installDefaultOption();
+  const roomNumberChangeHandler = function (evt) {
+    setCapacityValue(evt.target.value, evt.target, document.querySelector(`#capacity`));
+  };
+  document.querySelector(`#room_number`).addEventListener(`change`, roomNumberChangeHandler);
 };
 
 
