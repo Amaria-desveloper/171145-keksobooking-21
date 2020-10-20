@@ -2,12 +2,6 @@
 
 const NUMBER_OF_AVATARS = 8;
 
-/*
-
-
-const OFFSET_X = widthPin / 2;
-const OFFSET_Y = heightPin / 2;
-*/
 const TYPES = [
   `palace`,
   `flat`,
@@ -16,9 +10,9 @@ const TYPES = [
 ];
 
 const CAPACITY = [
-  `для 3 гостей`,
-  `для 2 гостей`,
   `для 1 гостя`,
+  `для 2 гостей`,
+  `для 3 гостей`,
   `не для гостей`
 ];
 
@@ -45,7 +39,15 @@ const PHOTOS = [
   `http://o0.github.io/assets/images/tokyo/hotel3.jpg`
 ];
 
+const DEPENCE_ROOM_GUESTS = {
+  1: [1],
+  2: [1, 2],
+  3: [1, 2, 3],
+  100: [0]
+};
 
+
+/* случайности */
 const getRandomInteger = function (min, max) {
   return Math.floor(min + Math.random() * (max + 1 - min));
 };
@@ -61,18 +63,27 @@ const getRandomArr = function (arr) {
   return randomArr;
 };
 
-const getSizeOfElement = function () {
+
+/* найти размер элемента
+  задать сдвиг на основе размеров */
+const sizeOfElement = {
+  "getWidth": function (element) {
+    return element.offsetWidth;
+  },
+  "getHeight": function (element) {
+    return element.offsetHeight;
+  }
+};
+
+const getOffset = function (element) {
   return {
-    Pin: {
-      Width: document.querySelector(`.map__pin`).offsetWidth,
-      Height: document.querySelector(`.map__pin`).offsetHeight
-    },
-    WidthMap: document.querySelector(`.map`).offsetWidth,
+    x: parseInt((sizeOfElement.getWidth(element) / 2), 10),
+    y: parseInt((sizeOfElement.getHeight(element) / 2), 10)
   };
 };
-let sizeOfElement = getSizeOfElement();
 
 
+/* выбор случайного аватара */
 const getAvatars = function () {
   const avatars = [];
   for (let i = 0; i < NUMBER_OF_AVATARS; i++) {
@@ -82,6 +93,7 @@ const getAvatars = function () {
 };
 
 
+/* До следующего задания
 const findElement = function (value) {
   switch (value) {
     case `palace`: return `Дворец`;
@@ -91,9 +103,11 @@ const findElement = function (value) {
     default: return ``;
   }
 };
+*/
 
 
-const getAdvert = function () {
+/* создание одного случайного объявления */
+const getAdvert = function (map, element) {
   return {
     "author": {
       "avatar": getRandomArrIndex(getAvatars())
@@ -103,7 +117,7 @@ const getAdvert = function () {
       "address": `0, 0`,
       "price": Math.round(getRandomInteger(1000, 5000) / 100) * 100,
       "type": getRandomArrIndex(TYPES),
-      "rooms": getRandomInteger(1, 5),
+      "rooms": getRandomInteger(1, 3),
       "guests": getRandomArrIndex(CAPACITY),
       "checkin": getRandomArrIndex(TIME_IN),
       "checkout": getRandomArrIndex(TIME_OUT),
@@ -112,34 +126,39 @@ const getAdvert = function () {
       "photos": getRandomArr(PHOTOS),
     },
     "location": {
-      "x": getRandomInteger(0, (sizeOfElement.WidthMap - sizeOfElement.Pin.Width)),
+      "x": getRandomInteger(0, (map - element)),
       "y": getRandomInteger(130, 630),
     }
   };
 };
 
+
+/* создание множества случайных объявлений */
 const getAdverts = function () {
   let adverts = [];
   for (let i = 0; i < NUMBER_OF_AVATARS; i++) {
-    adverts.push(getAdvert(i));
+    adverts.push(getAdvert(sizeOfElement.getWidth(document.querySelector(`.map`)), sizeOfElement.getWidth(document.querySelector(`.map__pin`))));
   }
   return adverts;
 };
 
 
-const createPinsFromTemplate = function (template, data) {
+/* создание отметки */
+const createPinsFromTemplate = function (template, data, offset) {
   let fragment = document.createDocumentFragment();
   for (let i = 0; i < data.length; i++) {
     let element = template.cloneNode(true);
     element.querySelector(`img`).src = data[i].author.avatar;
     element.querySelector(`img`).alt = data[i].offer.title;
-    element.style.left = data[i].location.x + (sizeOfElement.Pin.Width / 2) + `px`;
-    element.style.top = data[i].location.y + (sizeOfElement.Pin.Height / 2) + `px`;
+    element.style.left = data[i].location.x + offset.x + `px`;
+    element.style.top = data[i].location.y + offset.y + `px`;
     fragment.appendChild(element);
   }
   return fragment;
 };
 
+
+/* До следующего задания
 const createCardFromTemplate = function (template, data) {
   let fragment = document.createDocumentFragment();
   let element = template.cloneNode(true);
@@ -174,16 +193,152 @@ const createCardFromTemplate = function (template, data) {
   fragment.appendChild(element);
   return fragment;
 };
+*/
+
 
 const adverts = getAdverts();
 const pinMap = document.querySelector(`.map__pins`);
 const pinTemplate = document.querySelector(`#pin`)
     .content
     .querySelector(`.map__pin`);
+
+/* До следующего задания
 const cardTemplate = document.querySelector(`#card`).content.querySelector(`.map__card`);
+pinMap.append(createCardFromTemplate(cardTemplate, adverts)); */
 
 
-pinMap.append(createPinsFromTemplate(pinTemplate, adverts));
-pinMap.append(createCardFromTemplate(cardTemplate, adverts));
+/* module4 - task1
+1. disabled
+2. активация страницы
+3. заполнения поля адреса
+4. валидация: гости = кол-во комнат*/
 
-document.querySelector(`.map`).classList.remove(`map--faded`);
+/* найти координаты метки */
+const positionOfElement = {
+  "getTop": function (element) {
+    return parseInt(element.style.top, 10);
+  },
+  "getLeft": function (element) {
+    return parseInt(element.style.left, 10);
+  }
+};
+
+/* найти координаты метки куда указывает острый конец метки */
+const getPositionOfElement = function (element) {
+  let positionX =
+      positionOfElement.getTop(element) + sizeOfElement.getHeight(element);
+  let positionY =
+    positionOfElement.getLeft(element) + (sizeOfElement.getWidth(element) / 2);
+
+  return [positionX, ` ` + positionY];
+};
+
+/* установи адрес */
+const setAddressValue = function (inputElement, newValueFrom) {
+  let newValue = newValueFrom;
+  inputElement.value = newValue;
+};
+
+/* кол-во комнат <-> кол-во гостей */
+const installDefaultOption = function () {
+  for (let i = 1; i < document.querySelector(`#capacity`).length; i++) {
+    document.querySelector(`#capacity`)[i].setAttribute(`style`, `display: none`);
+  }
+};
+
+const makeCheckField = function (condition, message, element) {
+  const error = function () {
+    element.setCustomValidity(message);
+    element.reportValidity();
+  };
+  const success = function () {
+    element.setCustomValidity(``);
+  };
+
+  if (condition) {
+    success(message);
+  } else {
+    error(message);
+  }
+};
+
+const setCapacityValue = function (selectedValue, selectedElement, setElement) {
+  makeCheckField((DEPENCE_ROOM_GUESTS[selectedValue].includes(Number(setElement.value), 0)), `выберите допустимое количество гостей`, setElement);
+
+  let selectedElementValue = selectedElement.querySelector(`option[value="` + [selectedValue] + `"]`);
+  selectedElementValue.setAttribute(`selected`, `true`);
+
+  for (let i = 0; i < setElement.length; i++) {
+    setElement[i].setAttribute(`style`, `display: none`);
+  }
+
+  DEPENCE_ROOM_GUESTS[selectedValue].forEach(function (item) {
+    setElement.querySelector(`option[value="` + item + `"]`).setAttribute(`style`, `display: auto`);
+  });
+
+  const capacityChangeHandler = function (evt) {
+    evt.target.querySelector(`option[value="` + [evt.target.value] + `"]`).setAttribute(`selected`, `true`);
+    setCapacityValue(selectedValue, selectedElement, setElement);
+  };
+  document.querySelector(`#capacity`).addEventListener(`change`, capacityChangeHandler);
+};
+
+
+/* активация */
+const makeDisabled = {
+  "set": function (element) {
+    for (let i = 0; i < element.length; i++) {
+      element[i].setAttribute(`disabled`, true);
+    }
+  },
+  "remove": function (element) {
+    for (let i = 0; i < element.length; i++) {
+      element[i].removeAttribute(`disabled`, true);
+    }
+  }
+};
+
+const setActive = function () {
+  document.querySelector(`.map`).classList.remove(`map--faded`);
+  document.querySelector(`.ad-form`).classList.remove(`ad-form--disabled`);
+  pinMap.append(createPinsFromTemplate(pinTemplate, adverts, getOffset(document.querySelector(`.map__pin`))));
+  makeDisabled.remove(document.querySelectorAll(`.ad-form fieldset`));
+  installDefaultOption();
+  const roomNumberChangeHandler = function (evt) {
+    setCapacityValue(evt.target.value, evt.target, document.querySelector(`#capacity`));
+  };
+  document.querySelector(`#room_number`).addEventListener(`change`, roomNumberChangeHandler);
+};
+
+
+const setInactive = function () {
+  document.querySelector(`.map`).classList.add(`map--faded`);
+  document.querySelector(`.ad-form`).classList.add(`ad-form--disabled`);
+  makeDisabled.set(document.querySelectorAll(`.ad-form fieldset`));
+  makeDisabled.set(document.querySelectorAll(`.map__filters fieldset`));
+  makeDisabled.set(document.querySelectorAll(`.map__filters select`));
+};
+
+
+const makeWork = function () {
+  const mapPinMain = document.querySelector(`.map__pin--main`);
+  setAddressValue(document.querySelector(`#address`), getPositionOfElement(document.querySelector(`.map__pin--main`)));
+
+  mapPinMain.addEventListener(`mousedown`, function (evt) {
+    if (evt.button === 0) {
+      evt.preventDefault();
+      setActive();
+    }
+  });
+
+  mapPinMain.addEventListener(`keydown`, function (evt) {
+    if (evt.key === `Enter`) {
+      setActive();
+    }
+  });
+};
+
+setInactive();
+makeWork();
+
+
