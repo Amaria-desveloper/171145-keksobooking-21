@@ -148,106 +148,108 @@ const pinTemplate = document.querySelector(`#pin`)
 const cardTemplate = document.querySelector(`#card`).content.querySelector(`.map__card`);
 
 
-const setupPin = function (template, data, offset, element, index) {
+const setupPin = function (template, data, index, offset) {
+  let element = template.cloneNode(true);
   element.querySelector(`img`).src = data[index].author.avatar;
   element.querySelector(`img`).alt = data[index].offer.title;
   element.style.left = data[index].location.x + offset.x + `px`;
   element.style.top = data[index].location.y + offset.y + `px`;
-  element.setAttribute(`data-advert-index`, index);
+
+  element.addEventListener(`mousedown`, function (evt) {
+    pinChoiceHandlerMousedown(evt, data[index]);
+  });
+
+  element.addEventListener(`keydown`, function (evt) {
+    pinChoiceHandlerEnter(evt, data[index]);
+  });
+
+  return element;
 };
 
-
-const setupCard = function (template, data, element, index) {
-  element.querySelector(`.popup__avatar`).src = data[index].author.avatar;
-  element.querySelector(`.popup__title`).textContent = data[index].offer.title;
+const setupCard = function (template, card) {
+  let element = template.cloneNode(true);
+  element.querySelector(`.popup__avatar`).src = card.author.avatar;
+  element.querySelector(`.popup__title`).textContent = card.offer.title;
   element.querySelector(`.popup__text--address`).setAttribute(`style`, `visibility: hidden;`);
-  element.querySelector(`.popup__text--price`).textContent = data[index].offer.price + `₽/ночь`;
-  element.querySelector(`.popup__type`).textContent = findElement(data[index].offer.type);
-  element.querySelector(`.popup__text--capacity`).textContent = `Комнат: ` + data[index].offer.rooms + `, ` + data[index].offer.guests;
-  element .querySelector(`.popup__text--time`).textContent = `Заезд после ` + data[index].offer.checkin + `, выезд до ` + data[index].offer.checkout;
+  element.querySelector(`.popup__text--price`).textContent = card.offer.price + `₽/ночь`;
+  element.querySelector(`.popup__type`).textContent = findElement(card.offer.type);
+  element.querySelector(`.popup__text--capacity`).textContent = `Комнат: ` + card.offer.rooms + `, ` + card.offer.guests;
+  element .querySelector(`.popup__text--time`).textContent = `Заезд после ` + card.offer.checkin + `, выезд до ` + card.offer.checkout;
 
   for (let j = 0; j < FEATURES.length; j++) {
-    if (data[index].offer.features.includes(FEATURES[j], 0) === false) {
+    if (card.offer.features.includes(FEATURES[j], 0) === false) {
       element.querySelector(`.popup__feature`).remove();
     }
   }
 
-  element.querySelector(`.popup__description`).textContent = data[index].offer.description;
-  element.querySelector(`.popup__photo`).src = data[index].offer.photos[0];
-  if (data[index].offer.photos.length > 1) {
-    for (let n = 1; n < data[index].offer.photos.length; n++) {
+  element.querySelector(`.popup__description`).textContent = card.offer.description;
+  element.querySelector(`.popup__photo`).src = card.offer.photos[0];
+  if (card.offer.photos.length > 1) {
+    for (let n = 1; n < card.offer.photos.length; n++) {
       let newPhoto = document.createElement(`img`);
       newPhoto.classList.add(`popup__photo`);
-      newPhoto.src = data[index].offer.photos[n];
+      newPhoto.src = card.offer.photos[n];
       newPhoto.width = `45`;
       newPhoto.height = `40`;
       newPhoto.alt = `Фотография жилья`;
       element.querySelector(`.popup__photos`).appendChild(newPhoto);
     }
   }
-  element.setAttribute(`data-advert-index`, index);
+
+  return element;
 };
 
 /* module4 - task2*/
 const renderAdverts = {
   "pins": function (template, data, offset) {
     let fragment = document.createDocumentFragment();
-
     for (let i = 0; i < data.length; i++) {
-      let element = template.cloneNode(true);
-      setupPin(template, data, offset, element, i);
-      fragment.appendChild(element);
+      fragment.appendChild(setupPin(template, data, i, offset));
     }
-
     return fragment;
   },
 
-  "cards": function (template, data) {
-    let pins = document.querySelectorAll(`.map__pin:not(.map__pin--main)`);
+  "cards": function (template, card) {
+    let fragment = document.createDocumentFragment();
+    fragment.appendChild(setupCard(template, card));
+    pinMap.append(fragment);
 
-    for (let i = 0; i < pins.length; i++) {
-      pins[i].addEventListener(`mousedown`, function (evt) {
-        pinChoiceHandlerMousedown(evt, i);
-      });
-    }
-
-    const pinChoiceHandlerMousedown = function (evt, index) {
+    let popup = document.querySelector(`.popup`);
+    popup.querySelector(`button`).focus();
+    popup.querySelector(`.popup__close`).addEventListener(`mousedown`, function (evt) {
       if (evt.button === 0) {
-        if (document.querySelector(`.map__card`) !== null) {
-          document.querySelector(`.map__card`).remove();
-        }
-        evt.preventDefault();
-        let pinChoosed = pins[index].getAttribute(`data-advert-index`);
-        showCard(pinChoosed, template, data);
+        closeCard(popup);
       }
-    };
+    });
+    popup.querySelector(`.popup__close`).addEventListener(`keydown`, function (evt) {
+      if (evt.key === `Enter`) {
+        closeCard(popup);
+      }
+    });
   }
 };
 
-const showCard = function (pinChoosed, template, data) {
-  let card = pinChoosed;
-  let fragment = document.createDocumentFragment();
-  let element = template.cloneNode(true);
 
-  setupCard(template, data, element, card);
-
-  fragment.appendChild(element);
-  pinMap.append(fragment);
-
-  let currentCard = document.querySelector(`.map__card[data-advert-index="` + card + `"]`);
-
-  currentCard.querySelector(`.popup__close`).addEventListener(`mousedown`, function (evt) {
-    if (evt.button === 0) {
-      closeCard(currentCard);
+const pinChoiceHandlerMousedown = function (evt, card) {
+  if (evt.button === 0) {
+    if (document.querySelector(`.map__card`) !== null) {
+      document.querySelector(`.map__card`).remove();
     }
-  });
-
-  currentCard.querySelector(`.popup__close`).addEventListener(`keydown`, function (evt) {
-    if (evt.key === `Enter`) {
-      closeCard(currentCard);
-    }
-  });
+    evt.preventDefault();
+    renderAdverts.cards(cardTemplate, card);
+  }
 };
+
+const pinChoiceHandlerEnter = function (evt, card) {
+  if (evt.key === `Enter`) {
+    if (document.querySelector(`.map__card`) !== null) {
+      document.querySelector(`.map__card`).remove();
+    }
+    evt.preventDefault();
+    renderAdverts.cards(cardTemplate, card);
+  }
+};
+
 
 const closeCard = function (element) {
   element.remove();
@@ -475,7 +477,6 @@ const setActive = function () {
   makeDisabled.remove(document.querySelectorAll(`.map__filters select`));
 
   pinMap.append(renderAdverts.pins(pinTemplate, adverts, getOffset(document.querySelector(`.map__pin`))));
-  renderAdverts.cards(cardTemplate, adverts);
 
   installDefaultForm();
 
