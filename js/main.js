@@ -492,24 +492,31 @@ const setInactive = function () {
   makeDisabled.set(document.querySelectorAll(`.map__filters select`));
 };
 
+const mapPinMain = document.querySelector(`.map__pin--main`);
+
+const mapPinMainHadlerMousedown = function (evt) {
+  if (evt.button === 0) {
+    evt.preventDefault();
+    setActive();
+    mapPinMain.removeEventListener(`mousedown`, mapPinMainHadlerMousedown);
+  }
+};
+
+const mapPinMainHandlerEnter = function (evt) {
+  if (evt.key === `Enter`) {
+    setActive();
+    mapPinMain.removeEventListener(`keydown`, mapPinMainHandlerEnter);
+  }
+};
+
 
 const makeWork = function () {
-  const mapPinMain = document.querySelector(`.map__pin--main`);
-  setAddressValue(document.querySelector(`#address`), getPositionOfElement(document.querySelector(`.map__pin--main`)));
+  setAddressValue(document.querySelector(`#address`), getPositionOfElement(mapPinMain));
 
-  mapPinMain.addEventListener(`mousedown`, function (evt) {
-    if (evt.button === 0) {
-      evt.preventDefault();
-      setActive();
-    }
-  });
-
-  mapPinMain.addEventListener(`keydown`, function (evt) {
-    if (evt.key === `Enter`) {
-      setActive();
-    }
-  });
+  mapPinMain.addEventListener(`mousedown`, mapPinMainHadlerMousedown);
+  mapPinMain.addEventListener(`keydown`, mapPinMainHandlerEnter);
 };
+
 
 setInactive();
 makeWork();
