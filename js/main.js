@@ -142,9 +142,7 @@ const getAdverts = function () {
 
 const adverts = getAdverts();
 const pinMap = document.querySelector(`.map__pins`);
-const pinTemplate = document.querySelector(`#pin`)
-    .content
-    .querySelector(`.map__pin`);
+const pinTemplate = document.querySelector(`#pin`).content.querySelector(`.map__pin`);
 const cardTemplate = document.querySelector(`#card`).content.querySelector(`.map__card`);
 
 
@@ -215,7 +213,6 @@ const renderAdverts = {
     pinMap.append(fragment);
 
     let popup = document.querySelector(`.popup`);
-    popup.querySelector(`button`).focus();
     popup.querySelector(`.popup__close`).addEventListener(`mousedown`, function (evt) {
       if (evt.button === 0) {
         closeCard(popup);
@@ -223,6 +220,12 @@ const renderAdverts = {
     });
     popup.querySelector(`.popup__close`).addEventListener(`keydown`, function (evt) {
       if (evt.key === `Enter`) {
+        closeCard(popup);
+      }
+    });
+
+    document.addEventListener(`keydown`, function (evt) {
+      if (evt.key === `Escape`) {
         closeCard(popup);
       }
     });
@@ -294,7 +297,6 @@ const installDefaultForm = function () {
   let images = document.querySelector(`#images`);
 
   address.setAttribute(`style`, `color: brown`);
-  address.setAttribute(`tabindex`, `-1`);
   address.setAttribute(`readonly`, `true`);
 
   price.placeholder = `1000`;
