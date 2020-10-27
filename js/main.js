@@ -194,6 +194,23 @@ const setupCard = function (template, card) {
     }
   }
 
+  element.querySelector(`.popup__close`).addEventListener(`mousedown`, function (evt) {
+    if (evt.button === 0) {
+      closeCard(element);
+    }
+  });
+  element.querySelector(`.popup__close`).addEventListener(`keydown`, function (evt) {
+    if (evt.key === `Enter`) {
+      closeCard(element);
+    }
+  });
+
+  document.addEventListener(`keydown`, function (evt) {
+    if (evt.key === `Escape`) {
+      closeCard(element);
+    }
+  });
+
   return element;
 };
 
@@ -211,32 +228,15 @@ const renderAdverts = {
     let fragment = document.createDocumentFragment();
     fragment.appendChild(setupCard(template, card));
     pinMap.append(fragment);
-
-    let popup = document.querySelector(`.popup`);
-    popup.querySelector(`.popup__close`).addEventListener(`mousedown`, function (evt) {
-      if (evt.button === 0) {
-        closeCard(popup);
-      }
-    });
-    popup.querySelector(`.popup__close`).addEventListener(`keydown`, function (evt) {
-      if (evt.key === `Enter`) {
-        closeCard(popup);
-      }
-    });
-
-    document.addEventListener(`keydown`, function (evt) {
-      if (evt.key === `Escape`) {
-        closeCard(popup);
-      }
-    });
   }
 };
 
 
 const pinChoiceHandlerMousedown = function (evt, card) {
+  const mapCard = document.querySelector(`.map__card`);
   if (evt.button === 0) {
-    if (document.querySelector(`.map__card`) !== null) {
-      document.querySelector(`.map__card`).remove();
+    if (mapCard !== null) {
+      mapCard.remove();
     }
     evt.preventDefault();
     renderAdverts.cards(cardTemplate, card);
@@ -244,9 +244,10 @@ const pinChoiceHandlerMousedown = function (evt, card) {
 };
 
 const pinChoiceHandlerEnter = function (evt, card) {
+  const mapCard = document.querySelector(`.map__card`);
   if (evt.key === `Enter`) {
-    if (document.querySelector(`.map__card`) !== null) {
-      document.querySelector(`.map__card`).remove();
+    if (mapCard !== null) {
+      mapCard.remove();
     }
     evt.preventDefault();
     renderAdverts.cards(cardTemplate, card);
@@ -287,8 +288,9 @@ const setAddressValue = function (inputElement, newValueFrom) {
 
 /* установить начальные значения формы */
 const installDefaultForm = function () {
-  for (let i = 1; i < document.querySelector(`#capacity`).length; i++) {
-    document.querySelector(`#capacity`)[i].setAttribute(`style`, `display: none`);
+  const capacity = document.querySelector(`#capacity`);
+  for (let i = 1; i < capacity.length; i++) {
+    capacity[i].setAttribute(`style`, `display: none`);
   }
 
   let address = document.querySelector(`#address`);
@@ -299,13 +301,15 @@ const installDefaultForm = function () {
   address.setAttribute(`style`, `color: brown`);
   address.setAttribute(`readonly`, `true`);
 
+  const fieldType = document.querySelector(`#type`);
+
   price.placeholder = `1000`;
-  price.setAttribute(`min`, TYPE_MIN_PRICE[document.querySelector(`#type`).value]);
+  price.setAttribute(`min`, TYPE_MIN_PRICE[fieldType.value]);
   price.setAttribute(`max`, `1000000`);
 
   document.querySelector(`#title`).addEventListener(`input`, titleHandlerInput);
 
-  document.querySelector(`#type`).addEventListener(`change`, typeChangeHandler);
+  fieldType.addEventListener(`change`, typeChangeHandler);
 
   avatar.setAttribute(`accept`, `image/*`);
   avatar.addEventListener(`change`, avatarHandlerChange);
@@ -335,16 +339,17 @@ const imagesHandlerChange = function (evt) {
 };
 
 const showImagesPreview = function (fileUploadElement) {
+  const adFormPhoto = document.querySelector(`.ad-form__photo`);
   let photo = document.createElement(`img`);
   photo.setAttribute(`width`, `100%`);
   photo.setAttribute(`height`, `100%`);
   photo.src = URL.createObjectURL(fileUploadElement.files[0]);
-  document.querySelector(`.ad-form__photo`).appendChild(photo);
+  adFormPhoto.appendChild(photo);
 
   if (fileUploadElement.files.length > 1) {
     let fragment = document.createDocumentFragment();
     for (let i = 1; i < fileUploadElement.files.length; i++) {
-      let element = document.querySelector(`.ad-form__photo`).cloneNode(true);
+      let element = adFormPhoto.cloneNode(true);
       photo.setAttribute(`width`, `100%`);
       photo.setAttribute(`height`, `100%`);
       photo.src = URL.createObjectURL(fileUploadElement.files[i]);
@@ -419,13 +424,14 @@ const typeChangeHandler = function (evt) {
 const setPriceValue = function (value, element) {
   element.setAttribute(`min`, TYPE_MIN_PRICE[value]);
   element.placeholder = TYPE_MIN_PRICE[value];
+  const fieldPrice = document.querySelector(`#price`);
 
   const priceHandlerBlur = function (evt) {
     evt.preventDefault();
-    makeCheckInput((document.querySelector(`#price`).value > TYPE_MIN_PRICE[value] || ``), (`Цена не менее ` + TYPE_MIN_PRICE[value]), (document.querySelector(`#type`).value > 1000000), (`Цена не более 1 000 000`), document.querySelector(`#price`));
+    makeCheckInput((fieldPrice.value > TYPE_MIN_PRICE[value] || ``), (`Цена не менее ` + TYPE_MIN_PRICE[value]), (document.querySelector(`#type`).value > 1000000), (`Цена не более 1 000 000`), fieldPrice);
   };
 
-  document.querySelector(`#price`).addEventListener(`blur`, priceHandlerBlur);
+  fieldPrice.addEventListener(`blur`, priceHandlerBlur);
 };
 
 
