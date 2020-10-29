@@ -1,6 +1,13 @@
 'use strict';
-
+/*
+* Манипуляции с DOM-элементом <map__pin>.
+*/
 (function () {
+  const setupCard = window.card.setupCard;
+
+  const mapPins = window.variables.map.mapPins;
+  const cardTemplate = document.querySelector(`#card`).content.querySelector(`.map__card`);
+
 
   /**
   * Генерирует DOM-элемент для Пина.
@@ -19,18 +26,8 @@
     element.style.top = data[index].location.y + offset.y + `px`;
 
 
-    /*
-    * слушает нажатие мыши по Пину
-    */
-    element.addEventListener(`mousedown`, function (evt) {
-      pinChoiceHandler(evt, data[index]);
-    });
-
-    /*
-    * слушает нажатие Enter по Пину
-    */
-    element.addEventListener(`keydown`, function (evt) {
-      pinChoiceHandler(evt, data[index]);
+    element.addEventListener(`click`, function (evt) {
+      pinChoiceClickHandler(evt, data[index]);
     });
 
     return element;
@@ -42,27 +39,12 @@
   * @param {MyEvent} evt - нажатие клавиши или кнопки мыши.
   * @param {Object} card - Объект с данными для карточки объявления.
   */
-  const pinChoiceHandler = function (evt, card) {
-    const renderCards = window.card.renderCards;
-    const pinMap = document.querySelector(`.map__pins`);
-    const cardTemplate = document.querySelector(`#card`).content.querySelector(`.map__card`);
-    const mapCard = document.querySelector(`.map__card`);
-
-    if (evt.button === 0) {
-      if (mapCard !== null) {
-        mapCard.remove();
-      }
-      evt.preventDefault();
-      pinMap.append(renderCards(cardTemplate, card));
+  const pinChoiceClickHandler = function (evt, card) {
+    let mapCard = document.querySelector(`.map__card`);
+    if (mapCard !== null) {
+      mapCard.remove();
     }
-
-    if (evt.key === `Enter`) {
-      if (mapCard !== null) {
-        mapCard.remove();
-      }
-      evt.preventDefault();
-      pinMap.append(renderCards(cardTemplate, card));
-    }
+    mapPins.append(setupCard(cardTemplate, card));
   };
 
 

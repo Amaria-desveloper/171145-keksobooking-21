@@ -1,6 +1,11 @@
 'use strict';
-
+/*
+* Манипуляции с DOM-элементом <map__card>.
+*/
 (function () {
+  const findElement = window.util.findElement;
+
+
   /**
   * Генерирует DOM-элемент для Карточки объявления.
   * @external Node
@@ -9,9 +14,6 @@
   * @return {external:Node} element - разметка одной Карточки объявления с информацией и стилями.
   */
   function setupCard(template, card) {
-
-    const findElement = window.util.findElement;
-
     let element = template.cloneNode(true);
     element.querySelector(`.popup__avatar`).src = card.author.avatar;
     element.querySelector(`.popup__title`).textContent = card.offer.title;
@@ -42,23 +44,19 @@
       }
     }
 
-    element.querySelector(`.popup__close`).addEventListener(`mousedown`, function (evt) {
-      if (evt.button === 0) {
-        closeCard(element);
-      }
-    });
 
-    element.querySelector(`.popup__close`).addEventListener(`keydown`, function (evt) {
-      if (evt.key === `Enter`) {
-        closeCard(element);
-      }
-    });
+    const popupButtonCloseClickHandler = function () {
+      closeCard(element);
+    };
 
-    document.addEventListener(`keydown`, function (evt) {
+    const popupButtonEscHandler = function (evt) {
       if (evt.key === `Escape`) {
         closeCard(element);
       }
-    });
+    };
+
+    element.querySelector(`.popup__close`).addEventListener(`click`, popupButtonCloseClickHandler);
+    document.addEventListener(`keydown`, popupButtonEscHandler);
 
     return element;
   }
@@ -73,22 +71,8 @@
   }
 
 
-  /*
-  * Генерирует карточку объявления с конкретными данными.
-  * @external Node
-  * @param {external:Node} template - шаблон Карточки.
-  * @param {Object} card - объект с данными для карточки объявления. (Получает от  выбранного Пина)
-  * @return (HTMLElement) fragment - возвращает #document-fragment. Созданную Карточку объявления.
-  */
-  function renderCards(template, card) {
-    let fragment = document.createDocumentFragment();
-    fragment.appendChild(setupCard(template, card));
-    return fragment;
-  }
-
-
   window.card = {
-    renderCards
+    setupCard
   };
 
 })();

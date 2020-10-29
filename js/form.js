@@ -1,6 +1,22 @@
 'use strict';
 
 (function () {
+  const TYPE_MIN_PRICE = window.constants.TYPE_MIN_PRICE;
+
+  const adFormAddress = window.variables.form.adFormAddress;
+  const adFormAvatar = window.variables.form.adFormAvatar;
+  const adFormType = window.variables.form.adFormType;
+  const adFormPrice = window.variables.form.adFormPrice;
+  const adFormCapacity = window.variables.form.adFormCapacity;
+  const adFormImages = window.variables.form.adFormImages;
+
+  const adFormTimeIn = document.querySelector(`#timein`);
+  const adFormTimeOut = document.querySelector(`#timeout`);
+  const adFormAvatarPreview = document.querySelector(`.ad-form-header__preview img`);
+  const adFormPhoto = document.querySelector(`.ad-form__photo`);
+  const containerAdFormPhoto = document.querySelector(`.ad-form__photo-container`);
+
+
   /*
   * Устанавливает адрес главной метки.
   * @external Node
@@ -18,30 +34,21 @@
   * Устанавливает форму в инициализирующее состояние.
   */
   function installDefaultForm() {
-    const capacity = document.querySelector(`#capacity`);
-    for (let i = 1; i < capacity.length; i++) {
-      capacity[i].setAttribute(`style`, `display: none`);
+    for (let i = 1; i < adFormCapacity.length; i++) {
+      adFormCapacity[i].setAttribute(`style`, `display: none`);
     }
 
-    let address = document.querySelector(`#address`);
-    let price = document.querySelector(`#price`);
-    let avatar = document.querySelector(`#avatar`);
-    let images = document.querySelector(`#images`);
+    adFormAddress.setAttribute(`style`, `color: brown`);
+    adFormAddress.setAttribute(`readonly`, `true`);
 
-    address.setAttribute(`style`, `color: brown`);
-    address.setAttribute(`readonly`, `true`);
+    adFormPrice.placeholder = `1000`;
+    adFormPrice.setAttribute(`min`, TYPE_MIN_PRICE[adFormType.value]);
+    adFormPrice.setAttribute(`max`, `1000000`);
 
-    const fieldType = document.querySelector(`#type`);
+    adFormAvatar.setAttribute(`accept`, `image/*`);
 
-    const TYPE_MIN_PRICE = window.constants.TYPE_MIN_PRICE;
-    price.placeholder = `1000`;
-    price.setAttribute(`min`, TYPE_MIN_PRICE[fieldType.value]);
-    price.setAttribute(`max`, `1000000`);
-
-    avatar.setAttribute(`accept`, `image/*`);
-
-    images.setAttribute(`accept`, `image/*`);
-    images.multiple = true;
+    adFormImages.setAttribute(`accept`, `image/*`);
+    adFormImages.multiple = true;
   }
 
 
@@ -55,18 +62,18 @@
       firstElement.value = secondElement.value;
     });
   }
-  syncValues(document.querySelector(`#timein`), document.querySelector(`#timeout`));
+  syncValues(adFormTimeIn, adFormTimeOut);
 
 
   /* показать превью аватара */
   function showAvatarPreview(fileUploadElement) {
-    document.querySelector(`.ad-form-header__preview img`).src = URL.createObjectURL(fileUploadElement.files[0]);
+    adFormAvatarPreview.src = URL.createObjectURL(fileUploadElement.files[0]);
   }
 
 
   /* Показать превью загруженных картинок */
   function showImagesPreview(fileUploadElement) {
-    const adFormPhoto = document.querySelector(`.ad-form__photo`);
+
     let photo = document.createElement(`img`);
     photo.setAttribute(`width`, `100%`);
     photo.setAttribute(`height`, `100%`);
@@ -82,7 +89,7 @@
         photo.src = URL.createObjectURL(fileUploadElement.files[i]);
         fragment.appendChild(element);
       }
-      document.querySelector(`.ad-form__photo-container`).appendChild(fragment);
+      containerAdFormPhoto.appendChild(fragment);
     }
   }
 

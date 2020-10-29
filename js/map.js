@@ -1,6 +1,27 @@
 'use strict';
 
 (function () {
+  const renderPins = window.pin.renderPins;
+  const getOffset = window.util.getOffset;
+  const getPositionOfElement = window.util.getPositionOfElement;
+  const installDefaultForm = window.form.installDefaultForm;
+  const setAddressValue = window.form.setAddressValue;
+  const validateForm = window.validateForm.validate;
+
+  const adverts = window.adverts;
+  const map = window.variables.map.map;
+  const mapPins = window.variables.map.mapPins;
+  const mapPin = window.variables.map.mapPin;
+  const adForm = window.variables.form.adForm;
+  const adFormFieldset = window.variables.form.adFormFieldset;
+  const adFormAddress = window.variables.form.adFormAddress;
+
+  const pinTemplate = document.querySelector(`#pin`).content.querySelector(`.map__pin`);
+  const mapPinMain = document.querySelector(`.map__pin--main`);
+  const mapFiltersFieldset = document.querySelectorAll(`.map__filters fieldset`);
+  const mapFiltersSelect = document.querySelectorAll(`.map__filters select`);
+
+
   /*
   * Переключатель атрибута disabled
   */
@@ -22,26 +43,17 @@
   * Запускает активное состояние страницы с нужными установками.
   */
   function setActive() {
-    const renderPins = window.pin.renderPins;
-    const getOffset = window.util.getOffset;
-    const installDefaultForm = window.form.installDefaultForm;
-    const validateForm = window.validateForm.validate;
-    const pinMap = document.querySelector(`.map__pins`);
-    const pinTemplate = document.querySelector(`#pin`).content.querySelector(`.map__pin`);
-    const adverts = window.adverts;
-
     installDefaultForm();
-
     validateForm();
 
-    document.querySelector(`.map`).classList.remove(`map--faded`);
-    document.querySelector(`.ad-form`).classList.remove(`ad-form--disabled`);
+    map.classList.remove(`map--faded`);
+    adForm.classList.remove(`ad-form--disabled`);
 
-    makeDisabled.remove(document.querySelectorAll(`.ad-form fieldset`));
-    makeDisabled.remove(document.querySelectorAll(`.map__filters fieldset`));
-    makeDisabled.remove(document.querySelectorAll(`.map__filters select`));
+    makeDisabled.remove(adFormFieldset);
+    makeDisabled.remove(mapFiltersFieldset);
+    makeDisabled.remove(mapFiltersSelect);
 
-    pinMap.append(renderPins(pinTemplate, adverts, getOffset(document.querySelector(`.map__pin`))));
+    mapPins.append(renderPins(pinTemplate, adverts, getOffset(mapPin)));
   }
 
 
@@ -49,11 +61,11 @@
   * Устанавливает вёрстку в инициализирующее состояние.
   */
   function setInactive() {
-    document.querySelector(`.map`).classList.add(`map--faded`);
-    document.querySelector(`.ad-form`).classList.add(`ad-form--disabled`);
-    makeDisabled.set(document.querySelectorAll(`.ad-form fieldset`));
-    makeDisabled.set(document.querySelectorAll(`.map__filters fieldset`));
-    makeDisabled.set(document.querySelectorAll(`.map__filters select`));
+    map.classList.add(`map--faded`);
+    adForm.classList.add(`ad-form--disabled`);
+    makeDisabled.set(adFormFieldset);
+    makeDisabled.set(mapFiltersFieldset);
+    makeDisabled.set(mapFiltersSelect);
   }
 
 
@@ -61,29 +73,15 @@
   * Активирует сайт по событию на Метке.
   */
   function makeWork() {
-    const getPositionOfElement = window.util.getPositionOfElement;
-    const mapPinMain = document.querySelector(`.map__pin--main`);
-    const setAddressValue = window.form.setAddressValue;
+    setAddressValue(adFormAddress, getPositionOfElement(mapPinMain));
 
-    const mapPinMainHandlerMousedown = function (evt) {
-      if (evt.button === 0) {
-        evt.preventDefault();
-        setActive();
-        mapPinMain.removeEventListener(`mousedown`, mapPinMainHandlerMousedown);
-      }
+    const mapPinMainClickHandler = function (evt) {
+      evt.preventDefault();
+      setActive();
+      mapPinMain.removeEventListener(`click`, mapPinMainClickHandler);
     };
 
-    const mapPinMainHandlerEnter = function (evt) {
-      if (evt.key === `Enter`) {
-        setActive();
-        mapPinMain.removeEventListener(`keydown`, mapPinMainHandlerEnter);
-      }
-    };
-
-    setAddressValue(document.querySelector(`#address`), getPositionOfElement(mapPinMain));
-
-    mapPinMain.addEventListener(`mousedown`, mapPinMainHandlerMousedown);
-    mapPinMain.addEventListener(`keydown`, mapPinMainHandlerEnter);
+    mapPinMain.addEventListener(`click`, mapPinMainClickHandler);
   }
 
 
