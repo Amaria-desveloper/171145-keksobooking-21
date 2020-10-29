@@ -51,8 +51,10 @@
 
     const popupButtonEscHandler = function (evt) {
       if (evt.key === `Escape`) {
+        evt.preventDefault();
         closeCard(element);
       }
+      document.removeEventListener(`keydown`, popupButtonEscHandler);
     };
 
     element.querySelector(`.popup__close`).addEventListener(`click`, popupButtonCloseClickHandler);
