@@ -3,7 +3,10 @@
 (function () {
   const renderPins = window.pin.renderPins;
   const getOffset = window.util.getOffset;
-  const getPositionOfElement = window.util.getPositionOfElement;
+  const getCoordinateOfPinMain = window.util.getCoordinateOfPinMain;
+  const getCoordinateCenterOfPinMain = window.util.getCoordinateCenterOfPinMain;
+  const mapPinMainStartDrag = window.dragPinMain;
+
   const installDefaultForm = window.form.installDefaultForm;
   const setAddressValue = window.form.setAddressValue;
   const validateForm = window.validateForm.validate;
@@ -12,12 +15,12 @@
   const map = window.variables.map.map;
   const mapPins = window.variables.map.mapPins;
   const mapPin = window.variables.map.mapPin;
+  const mapPinMain = window.variables.map.mapPinMain;
   const adForm = window.variables.form.adForm;
   const adFormFieldset = window.variables.form.adFormFieldset;
   const adFormAddress = window.variables.form.adFormAddress;
 
   const pinTemplate = document.querySelector(`#pin`).content.querySelector(`.map__pin`);
-  const mapPinMain = document.querySelector(`.map__pin--main`);
   const mapFiltersFieldset = document.querySelectorAll(`.map__filters fieldset`);
   const mapFiltersSelect = document.querySelectorAll(`.map__filters select`);
 
@@ -53,6 +56,8 @@
     makeDisabled.remove(mapFiltersFieldset);
     makeDisabled.remove(mapFiltersSelect);
 
+    setAddressValue(adFormAddress, getCoordinateOfPinMain(mapPinMain));
+
     mapPins.append(renderPins(pinTemplate, adverts, getOffset(mapPin)));
   }
 
@@ -73,12 +78,13 @@
   * Активирует сайт по событию на Метке.
   */
   function makeWork() {
-    setAddressValue(adFormAddress, getPositionOfElement(mapPinMain));
+    setAddressValue(adFormAddress, getCoordinateCenterOfPinMain(mapPinMain));
 
     const mapPinMainClickHandler = function (evt) {
       evt.preventDefault();
       setActive();
       mapPinMain.removeEventListener(`click`, mapPinMainClickHandler);
+      mapPinMain.addEventListener(`mousedown`, mapPinMainStartDrag);
     };
 
     mapPinMain.addEventListener(`click`, mapPinMainClickHandler);
