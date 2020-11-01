@@ -2,14 +2,12 @@
 
 (function () {
   const renderPins = window.pin.renderPins;
-  const getOffset = window.util.getOffset;
   const getPositionOfElement = window.util.getPositionOfElement;
   const installDefaultForm = window.form.installDefaultForm;
   const setAddressValue = window.form.setAddressValue;
   const validateForm = window.validateForm.validate;
   const map = window.variables.map.map;
   const mapPins = window.variables.map.mapPins;
-  const mapPin = window.variables.map.mapPin;
   const adForm = window.variables.form.adForm;
   const adFormFieldset = window.variables.form.adFormFieldset;
   const adFormAddress = window.variables.form.adFormAddress;
