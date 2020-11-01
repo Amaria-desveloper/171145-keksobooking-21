@@ -43,7 +43,7 @@
   * В случае успешной загрузки данных с сервера...
   */
   const successHandler = function (data) {
-    mapPins.append(renderPins(pinTemplate, data, getOffset(mapPin)));
+    mapPins.append(renderPins(pinTemplate, data));
   };
 
 

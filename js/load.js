@@ -4,7 +4,7 @@
 * TIMEOUT 10000 = 10s
 */
 (function () {
-  const dataURL = `https://21.javascript.pages.academy/keksobooking/data`;
+  const DATA_URL = `https://21.javascript.pages.academy/keksobooking/data`;
   const TIMEOUT = 10000;
 
   const StatusCode = {
@@ -50,7 +50,7 @@
     });
 
 
-    xhr.open(`GET`, dataURL);
+    xhr.open(`GET`, DATA_URL);
     xhr.send();
   };
 
