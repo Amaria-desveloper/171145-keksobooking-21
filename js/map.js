@@ -7,14 +7,14 @@
   const installDefaultForm = window.form.installDefaultForm;
   const setAddressValue = window.form.setAddressValue;
   const validateForm = window.validateForm.validate;
-
-  const adverts = window.adverts;
   const map = window.variables.map.map;
   const mapPins = window.variables.map.mapPins;
   const mapPin = window.variables.map.mapPin;
   const adForm = window.variables.form.adForm;
   const adFormFieldset = window.variables.form.adFormFieldset;
   const adFormAddress = window.variables.form.adFormAddress;
+  const downloadData = window.load.downloadData;
+  const errorHandler = window.errors.errorHandler;
 
   const pinTemplate = document.querySelector(`#pin`).content.querySelector(`.map__pin`);
   const mapPinMain = document.querySelector(`.map__pin--main`);
@@ -40,7 +40,15 @@
 
 
   /*
-  * Запускает активное состояние страницы с нужными установками.
+  * В случае успешной загрузки данных с сервера...
+  */
+  const successHandler = function (data) {
+    mapPins.append(renderPins(pinTemplate, data, getOffset(mapPin)));
+  };
+
+
+  /*
+  * ...Запускает активное состояние страницы с нужными установками.
   */
   function setActive() {
     installDefaultForm();
@@ -53,9 +61,8 @@
     makeDisabled.remove(mapFiltersFieldset);
     makeDisabled.remove(mapFiltersSelect);
 
-    mapPins.append(renderPins(pinTemplate, adverts, getOffset(mapPin)));
+    downloadData(successHandler, errorHandler);
   }
-
 
   /*
   * Устанавливает вёрстку в инициализирующее состояние.
