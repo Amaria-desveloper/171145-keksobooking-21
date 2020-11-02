@@ -79,14 +79,6 @@
     element.remove();
   }
 
-  /*
-  * Закрывает карточку. Удаляет узел из DOM.
-  *
-  */
-  function closeCard(element) {
-    element.remove();
-  }
-
 
   window.util = {
     sizeOfElement,
