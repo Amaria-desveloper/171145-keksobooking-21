@@ -94,14 +94,21 @@
     return [positionX + `, ` + positionY];
   }
 
+  /*
+  * Закрывает карточку. Удаляет узел из DOM.
+  *
+  */
+  function closeCard(element) {
+    element.remove();
+  }
+
 
   window.util = {
     sizeOfElement,
     getOffset,
     findElement,
     getPositionOfElement,
-    getCoordinateOfPinMain,
-    getCoordinateCenterOfPinMain
+    closeCard
   };
 
 })();

@@ -3,7 +3,6 @@
 (function () {
 
   window.constants = {
-    NUMBER_OF_AVATARS: 8,
 
     TYPES: {
       flat: `Квартира`,
@@ -32,12 +31,6 @@
       `washer`,
       `elevator`,
       `conditioner`,
-    ],
-
-    PHOTOS: [
-      `http://o0.github.io/assets/images/tokyo/hotel1.jpg`,
-      `http://o0.github.io/assets/images/tokyo/hotel2.jpg`,
-      `http://o0.github.io/assets/images/tokyo/hotel3.jpg`
     ],
 
     DEPENCE_ROOM_GUESTS: {
