@@ -17,6 +17,15 @@
     right: getWidth(map) - halfOfPinMain
   };
 
+  function checkNewPosition(property, currentPosition, limitedAreaStart, limitedAreaEnd) {
+    if (currentPosition < limitedAreaStart) {
+      mapPinMain.style[property] = limitedAreaStart + `px`;
+    } else if (currentPosition > limitedAreaEnd) {
+      mapPinMain.style[property] = limitedAreaEnd + `px`;
+    } else {
+      mapPinMain.style[property] = currentPosition + `px`;
+    }
+  }
 
   function mapPinMainStartDrag(evt) {
     evt.preventDefault();
@@ -39,23 +48,13 @@
         y: moveEvt.clientY
       };
 
+      const movedCoordinates = {
+        x: mapPinMain.offsetLeft - shift.x,
+        y: mapPinMain.offsetTop - shift.y
+      };
 
-      if (mapPinMain.offsetLeft <= limitedArea.left) {
-        mapPinMain.style.left = 0 + `px`;
-      } else if (mapPinMain.offsetLeft >= limitedArea.right) {
-        mapPinMain.style.left = (limitedArea.right - halfOfPinMain) + `px`;
-      } else {
-        mapPinMain.style.left = (mapPinMain.offsetLeft - shift.x) + `px`;
-      }
-
-
-      if (mapPinMain.offsetTop < limitedArea.TOP) {
-        mapPinMain.style.top = limitedArea.TOP + `px`;
-      } else if (mapPinMain.offsetTop > limitedArea.BOTTOM) {
-        mapPinMain.style.top = limitedArea.BOTTOM - halfOfPinMain + `px`;
-      } else {
-        mapPinMain.style.top = (mapPinMain.offsetTop - shift.y) + `px`;
-      }
+      checkNewPosition(`left`, movedCoordinates.x, limitedArea.left, limitedArea.right);
+      checkNewPosition(`top`, movedCoordinates.y, limitedArea.TOP, limitedArea.BOTTOM);
     };
 
 
