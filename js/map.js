@@ -2,25 +2,20 @@
 
 (function () {
   const renderPins = window.pin.renderPins;
-  const getOffset = window.util.getOffset;
-  const getCoordinateOfPinMain = window.util.getCoordinateOfPinMain;
-  const getCoordinateCenterOfPinMain = window.util.getCoordinateCenterOfPinMain;
-  const mapPinMainStartDrag = window.dragPinMain;
-
+  const getPositionOfElement = window.util.getPositionOfElement;
   const installDefaultForm = window.form.installDefaultForm;
   const setAddressValue = window.form.setAddressValue;
   const validateForm = window.validateForm.validate;
-
-  const adverts = window.adverts;
   const map = window.variables.map.map;
   const mapPins = window.variables.map.mapPins;
-  const mapPin = window.variables.map.mapPin;
-  const mapPinMain = window.variables.map.mapPinMain;
   const adForm = window.variables.form.adForm;
   const adFormFieldset = window.variables.form.adFormFieldset;
   const adFormAddress = window.variables.form.adFormAddress;
+  const downloadData = window.load.downloadData;
+  const errorHandler = window.errors.errorHandler;
 
   const pinTemplate = document.querySelector(`#pin`).content.querySelector(`.map__pin`);
+  const mapPinMain = document.querySelector(`.map__pin--main`);
   const mapFiltersFieldset = document.querySelectorAll(`.map__filters fieldset`);
   const mapFiltersSelect = document.querySelectorAll(`.map__filters select`);
 
@@ -43,7 +38,15 @@
 
 
   /*
-  * Запускает активное состояние страницы с нужными установками.
+  * В случае успешной загрузки данных с сервера...
+  */
+  const successHandler = function (data) {
+    mapPins.append(renderPins(pinTemplate, data));
+  };
+
+
+  /*
+  * ...Запускает активное состояние страницы с нужными установками.
   */
   function setActive() {
     installDefaultForm();
@@ -56,11 +59,8 @@
     makeDisabled.remove(mapFiltersFieldset);
     makeDisabled.remove(mapFiltersSelect);
 
-    setAddressValue(adFormAddress, getCoordinateOfPinMain(mapPinMain));
-
-    mapPins.append(renderPins(pinTemplate, adverts, getOffset(mapPin)));
+    downloadData(successHandler, errorHandler);
   }
-
 
   /*
   * Устанавливает вёрстку в инициализирующее состояние.
@@ -78,13 +78,12 @@
   * Активирует сайт по событию на Метке.
   */
   function makeWork() {
-    setAddressValue(adFormAddress, getCoordinateCenterOfPinMain(mapPinMain));
+    setAddressValue(adFormAddress, getPositionOfElement(mapPinMain));
 
     const mapPinMainClickHandler = function (evt) {
       evt.preventDefault();
       setActive();
       mapPinMain.removeEventListener(`click`, mapPinMainClickHandler);
-      mapPinMain.addEventListener(`mousedown`, mapPinMainStartDrag);
     };
 
     mapPinMain.addEventListener(`click`, mapPinMainClickHandler);

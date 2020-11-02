@@ -60,38 +60,23 @@
 
 
   /*
-  * Координаты главной метки (по указателю)
-  */
-  function getCoordinateOfPinMain() {
-    let element = document.querySelector(`.map__pin--main`);
-    const pinPointer = window.getComputedStyle(element, `::after`);
-    const pinPointerWidth = parseInt(pinPointer.getPropertyValue(`border-top-width`), 10);
-
-    let positionX = Math.floor(positionOfElement.getLeft(element) + (sizeOfElement.getWidth(element) / 2));
-    let positionY = positionOfElement.getTop(element) + sizeOfElement.getHeight(element) + (pinPointerWidth / 2);
-
-    return [positionX + `, ` + positionY];
-  }
-
-  /*
-  * Координаты главной метки по её центру (в неактивном состоянии)
-  */
-  function getCoordinateCenterOfPinMain(element) {
-    let positionX = positionOfElement.getLeft(element) + (sizeOfElement.getWidth(element) / 2);
-    let positionY = positionOfElement.getTop(element) + Math.floor(sizeOfElement.getHeight(element) / 2);
-
-    return [positionX + `, ` + positionY];
-  }
-
-
-  /*
-  * найти координаты типичного Пина куда указывает острый конец метки
+  * найти координаты метки куда указывает острый конец метки
   */
   function getPositionOfElement(element) {
-    let positionX = positionOfElement.getLeft(element) + (sizeOfElement.getWidth(element) / 2);
-    let positionY = positionOfElement.getTop(element) + sizeOfElement.getHeight(element);
+    let positionX =
+        positionOfElement.getTop(element) + sizeOfElement.getHeight(element);
+    let positionY =
+      positionOfElement.getLeft(element) + (sizeOfElement.getWidth(element) / 2);
 
-    return [positionX + `, ` + positionY];
+    return [positionX, ` ` + positionY];
+  }
+
+  /*
+  * Закрывает карточку. Удаляет узел из DOM.
+  *
+  */
+  function closeCard(element) {
+    element.remove();
   }
 
 
@@ -100,8 +85,7 @@
     getOffset,
     findElement,
     getPositionOfElement,
-    getCoordinateOfPinMain,
-    getCoordinateCenterOfPinMain
+    closeCard
   };
 
 })();
