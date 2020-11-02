@@ -4,27 +4,24 @@
 */
 (function () {
   const setupCard = window.card.setupCard;
-
   const mapPins = window.variables.map.mapPins;
   const cardTemplate = document.querySelector(`#card`).content.querySelector(`.map__card`);
 
 
   /**
-  * Генерирует DOM-элемент для Пина.
+  * Генерирует DOM-элемент для Пина. Слушает клик по выбранному Пину.
   * @external Node
   * @param {external:Node} template - шаблон Пина.
   * @param {Array.<Object>} data - массив из объекта. Данные для шаблона.
   * @param {Number} index - номер элемента массива data.
-  * @param {Object.<Number>} offset - смещение по x,y.
   * @return {external:Node} element - разметка одного Пина с информацией и стилями.
   */
-  function setupPin(template, data, index, offset) {
+  function setupPin(template, data, index) {
     let element = template.cloneNode(true);
     element.querySelector(`img`).src = data[index].author.avatar;
     element.querySelector(`img`).alt = data[index].offer.title;
-    element.style.left = data[index].location.x + offset.x + `px`;
-    element.style.top = data[index].location.y + offset.y + `px`;
-
+    element.style.left = data[index].location.x + `px`;
+    element.style.top = data[index].location.y + `px`;
 
     element.addEventListener(`click`, function (evt) {
       pinChoiceClickHandler(evt, data[index]);
@@ -56,10 +53,10 @@
   * @param {function} offset - размеры для учёта смещения метки.
   * @return (HTMLElement) fragment - возвращает #document-fragment. Созданное множество Пинов.
   */
-  function renderPins(template, data, offset) {
+  function renderPins(template, data) {
     let fragment = document.createDocumentFragment();
     for (let i = 0; i < data.length; i++) {
-      fragment.appendChild(setupPin(template, data, i, offset));
+      fragment.appendChild(setupPin(template, data, i));
     }
     return fragment;
   }
