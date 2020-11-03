@@ -3,9 +3,9 @@
 * Точка входа
 */
 (function () {
+  const removeCurrentPins = window.pin.removeCurrentPins;
   const setInactive = window.map.setInactive;
   const makeWork = window.map.makeWork;
-  const removeCurrentPins = window.pin.removeCurrentPins;
 
   /*
   * при запуске

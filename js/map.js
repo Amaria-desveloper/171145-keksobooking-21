@@ -1,25 +1,26 @@
 'use strict';
 
 (function () {
-  const getPositionOfElement = window.util.getPositionOfElement;
+  const getCoordinateCenterOfPinMain = window.util.getCoordinateCenterOfPinMain;
   const downloadData = window.backend.downloadData;
   const errorDataHandler = window.notices.errorDataHandler;
   const renderPins = window.pin.renderPins;
   const removeCard = window.card.removeCard;
+  const mapPinMainStartDrag = window.dragPinMain;
 
   const formReset = window.form.formReset;
   const installDefaultForm = window.form.installDefaultForm;
   const setAddressValue = window.form.setAddressValue;
   const validateForm = window.validateForm.validate;
   const map = window.variables.map.map;
+  const mapPinMain = window.variables.map.mapPinMain;
   const mapPins = window.variables.map.mapPins;
   const adForm = window.variables.form.adForm;
   const adFormFieldset = window.variables.form.adFormFieldset;
   const adFormAddress = window.variables.form.adFormAddress;
-
+  const backMapPinMain = window.backMapPinMain;
 
   const pinTemplate = document.querySelector(`#pin`).content.querySelector(`.map__pin`);
-  const mapPinMain = document.querySelector(`.map__pin--main`);
   const mapFiltersFieldset = document.querySelectorAll(`.map__filters fieldset`);
   const mapFiltersSelect = document.querySelectorAll(`.map__filters select`);
 
@@ -64,6 +65,8 @@
     makeDisabled.remove(mapFiltersSelect);
 
     downloadData(successDataHandler, errorDataHandler);
+
+    mapPinMain.addEventListener(`mousedown`, mapPinMainStartDrag);
   }
 
   /*
@@ -77,6 +80,11 @@
     makeDisabled.set(mapFiltersFieldset);
     makeDisabled.set(mapFiltersSelect);
     removeCard();
+
+    mapPinMain.style.left = backMapPinMain.left;
+    mapPinMain.style.top = backMapPinMain.top;
+
+    setAddressValue(adFormAddress, getCoordinateCenterOfPinMain(mapPinMain));
   }
 
 
@@ -84,7 +92,6 @@
   * Активирует сайт по событию на Метке.
   */
   function makeWork() {
-    setAddressValue(adFormAddress, getPositionOfElement(mapPinMain));
 
     const mapPinMainClickHandler = function (evt) {
       evt.preventDefault();
@@ -98,7 +105,7 @@
 
   window.map = {
     setInactive,
-    makeWork
+    makeWork,
   };
 
 })();
