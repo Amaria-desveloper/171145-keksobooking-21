@@ -1,7 +1,34 @@
 'use strict';
+/*
+* Точка входа
+*/
+(function () {
+  const setInactive = window.map.setInactive;
+  const makeWork = window.map.makeWork;
+  const removeCurrentPins = window.pin.removeCurrentPins;
 
-const setInactive = window.map.setInactive;
-const makeWork = window.map.makeWork;
+  /*
+  * при запуске
+  */
+  function setInitial() {
+    setInactive();
+    makeWork();
+  }
 
-setInactive();
-makeWork();
+  /*
+  * Возвращает страницу в начальное состояние
+  */
+  function restartPage() {
+    removeCurrentPins();
+    setInitial();
+  }
+
+
+  setInitial();
+
+
+  window.main = {
+    restartPage
+  };
+
+})();

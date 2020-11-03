@@ -1,8 +1,13 @@
 'use strict';
 
 (function () {
-  const renderPins = window.pin.renderPins;
   const getPositionOfElement = window.util.getPositionOfElement;
+  const downloadData = window.backend.downloadData;
+  const errorDataHandler = window.notices.errorDataHandler;
+  const renderPins = window.pin.renderPins;
+  const removeCard = window.card.removeCard;
+
+  const formReset = window.form.formReset;
   const installDefaultForm = window.form.installDefaultForm;
   const setAddressValue = window.form.setAddressValue;
   const validateForm = window.validateForm.validate;
@@ -11,8 +16,7 @@
   const adForm = window.variables.form.adForm;
   const adFormFieldset = window.variables.form.adFormFieldset;
   const adFormAddress = window.variables.form.adFormAddress;
-  const downloadData = window.load.downloadData;
-  const errorHandler = window.errors.errorHandler;
+
 
   const pinTemplate = document.querySelector(`#pin`).content.querySelector(`.map__pin`);
   const mapPinMain = document.querySelector(`.map__pin--main`);
@@ -40,13 +44,13 @@
   /*
   * В случае успешной загрузки данных с сервера...
   */
-  const successHandler = function (data) {
+  const successDataHandler = function (data) {
     mapPins.append(renderPins(pinTemplate, data));
   };
 
 
   /*
-  * ...Запускает активное состояние страницы с нужными установками.
+  * ...Запускает активное состояние страницы с нужными установками (В случае успешной загрузки данных с сервера)
   */
   function setActive() {
     installDefaultForm();
@@ -59,7 +63,7 @@
     makeDisabled.remove(mapFiltersFieldset);
     makeDisabled.remove(mapFiltersSelect);
 
-    downloadData(successHandler, errorHandler);
+    downloadData(successDataHandler, errorDataHandler);
   }
 
   /*
@@ -68,9 +72,11 @@
   function setInactive() {
     map.classList.add(`map--faded`);
     adForm.classList.add(`ad-form--disabled`);
+    formReset(adForm);
     makeDisabled.set(adFormFieldset);
     makeDisabled.set(mapFiltersFieldset);
     makeDisabled.set(mapFiltersSelect);
+    removeCard();
   }
 
 

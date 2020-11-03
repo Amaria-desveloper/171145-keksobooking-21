@@ -4,12 +4,30 @@
 * TIMEOUT 10000 = 10s
 */
 (function () {
+  const URL_POST = `https://21.javascript.pages.academy/keksobooking`;
   const DATA_URL = `https://21.javascript.pages.academy/keksobooking/data`;
   const TIMEOUT = 10000;
 
   const StatusCode = {
     OK: 200
   };
+
+  function send(data, onSuccess, onError) {
+    const xhr = new XMLHttpRequest();
+    xhr.responseType = `json`;
+
+    xhr.addEventListener(`load`, function () {
+      if (xhr.status === StatusCode.OK) {
+        onSuccess(xhr.response);
+      } else {
+        onError(`Статус ответа: ` + xhr.status + ` ` + xhr.statusText);
+      }
+
+    });
+
+    xhr.open(`POST`, URL_POST);
+    xhr.send(data);
+  }
 
 
   const downloadData = function (onSuccess, onError) {
@@ -54,7 +72,8 @@
     xhr.send();
   };
 
-  window.load = {
+  window.backend = {
+    send,
     downloadData
   };
 })();
