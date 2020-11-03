@@ -8,7 +8,7 @@
       "map": {
         map: document.querySelector(`.map`),
         mapPins: document.querySelector(`.map__pins`),
-        mapPin: document.querySelector(`.map__pin`)
+        mapPin: document.querySelector(`.map__pin`),
       },
       "form": {
         adForm: document.querySelector(`.ad-form`),
@@ -18,7 +18,8 @@
         adFormType: document.querySelector(`#type`),
         adFormPrice: document.querySelector(`#price`),
         adFormCapacity: document.querySelector(`#capacity`),
-        adFormImages: document.querySelector(`#images`)
+        adFormImages: document.querySelector(`#images`),
+        adFormRoomNumber: document.querySelector(`#room_number`)
       }
     };
   }

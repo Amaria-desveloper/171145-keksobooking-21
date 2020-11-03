@@ -72,9 +72,16 @@
     return element;
   }
 
+  function removeCard() {
+    const mapCard = document.querySelector(`.map__card`);
+    if (mapCard) {
+      closeCard(mapCard);
+    }
+  }
 
   window.card = {
-    setupCard
+    setupCard,
+    removeCard
   };
 
 })();
