@@ -3,11 +3,10 @@
 */
 'use strict';
 (function () {
-  const createXHR = window.backend.createXHR;
+  const save = window.backend.save;
   const sendIsSuccess = window.notices.sendIsSuccess;
   const sendIsError = window.notices.sendIsError;
 
-  const URL_POST = window.constants.URL_POST;
   const TYPE_MIN_PRICE = window.constants.TYPE_MIN_PRICE;
   const DEPENCE_ROOM_GUESTS = window.constants.DEPENCE_ROOM_GUESTS;
   const adForm = window.variables.form.adForm;
@@ -150,7 +149,7 @@
   */
   const submitHandler = function (evt) {
     evt.preventDefault();
-    createXHR(sendIsSuccess, sendIsError, `POST`, URL_POST, new FormData(adForm));
+    save(sendIsSuccess, sendIsError, new FormData(adForm));
   };
 
   function validate() {

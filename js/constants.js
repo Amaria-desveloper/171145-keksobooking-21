@@ -3,9 +3,6 @@
 (function () {
 
   window.constants = {
-    DATA_URL: `https://21.javascript.pages.academy/keksobooking/data`,
-    URL_POST: `https://21.javascript.pages.academy/keksobooking`,
-    TIMEOUT: 10000,
 
     TYPES: {
       flat: `Квартира`,

@@ -5,12 +5,15 @@
 */
 (function () {
   const TIMEOUT = window.constants.TIMEOUT;
+  const DATA_URL = `https://21.javascript.pages.academy/keksobooking/data`;
+  const URL_POST = `https://21.javascript.pages.academy/keksobooking`;
 
   const StatusCode = {
     OK: 200,
     BAD_REQUEST: 400,
     NOT_FOUND: 404
   };
+
 
   function createXHR(onSuccess, onError, method, url, data) {
     const xhr = new XMLHttpRequest();
@@ -50,10 +53,21 @@
     xhr.addEventListener(`timeout`, function () {
       onError(`Запрос не успел выполниться за ` + TIMEOUT + `мс`);
     });
+
+    return xhr;
+  }
+
+  function load(onSuccess, onError) {
+    createXHR(onSuccess, onError, `GET`, DATA_URL);
+  }
+
+  function save(onSuccess, onError, data) {
+    createXHR(onSuccess, onError, `POST`, URL_POST, data);
   }
 
   window.backend = {
-    createXHR
+    load,
+    save
   };
 
 })();

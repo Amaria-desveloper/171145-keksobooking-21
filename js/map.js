@@ -2,7 +2,7 @@
 
 (function () {
   const getCoordinateCenterOfPinMain = window.util.getCoordinateCenterOfPinMain;
-  const createXHR = window.backend.createXHR;
+  const load = window.backend.load;
   const errorDataHandler = window.notices.errorDataHandler;
   const renderPins = window.pin.renderPins;
   const removeCard = window.card.removeCard;
@@ -19,7 +19,6 @@
   const adFormFieldset = window.variables.form.adFormFieldset;
   const adFormAddress = window.variables.form.adFormAddress;
 
-  const DATA_URL = window.constants.DATA_URL;
   const pinTemplate = document.querySelector(`#pin`).content.querySelector(`.map__pin`);
   const mapFiltersFieldset = document.querySelectorAll(`.map__filters fieldset`);
   const mapFiltersSelect = document.querySelectorAll(`.map__filters select`);
@@ -68,7 +67,7 @@
     makeDisabled.remove(mapFiltersFieldset);
     makeDisabled.remove(mapFiltersSelect);
 
-    createXHR(successDataHandler, errorDataHandler, `GET`, DATA_URL);
+    load(successDataHandler, errorDataHandler);
 
     mapPinMain.addEventListener(`mousedown`, mapPinMainStartDrag);
   }
