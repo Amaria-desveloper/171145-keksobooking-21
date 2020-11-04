@@ -3,21 +3,22 @@
 */
 'use strict';
 (function () {
-  const TYPE_MIN_PRICE = window.constants.TYPE_MIN_PRICE;
-  const send = window.backend.send;
+  const createXHR = window.backend.createXHR;
   const sendIsSuccess = window.notices.sendIsSuccess;
   const sendIsError = window.notices.sendIsError;
 
+  const URL_POST = window.constants.URL_POST;
+  const TYPE_MIN_PRICE = window.constants.TYPE_MIN_PRICE;
+  const DEPENCE_ROOM_GUESTS = window.constants.DEPENCE_ROOM_GUESTS;
   const adForm = window.variables.form.adForm;
   const adFormAvatar = window.variables.form.adFormAvatar;
   const adFormType = window.variables.form.adFormType;
   const adFormPrice = window.variables.form.adFormPrice;
   const adFormCapacity = window.variables.form.adFormCapacity;
   const adFormImages = window.variables.form.adFormImages;
+  const adFormRoomNumber = window.variables.form.adFormRoomNumber;
 
   const adFormTitle = document.querySelector(`#title`);
-  const adFormRoomNumber = window.variables.form.adFormRoomNumber;
-  const DEPENCE_ROOM_GUESTS = window.constants.DEPENCE_ROOM_GUESTS;
 
 
   /*
@@ -148,8 +149,8 @@
   * Слушает форму
   */
   const submitHandler = function (evt) {
-    send(new FormData(adForm), sendIsSuccess, sendIsError);
     evt.preventDefault();
+    createXHR(sendIsSuccess, sendIsError, `POST`, URL_POST, new FormData(adForm));
   };
 
   function validate() {

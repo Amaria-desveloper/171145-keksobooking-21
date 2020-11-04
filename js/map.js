@@ -2,28 +2,32 @@
 
 (function () {
   const getCoordinateCenterOfPinMain = window.util.getCoordinateCenterOfPinMain;
-  const downloadData = window.backend.downloadData;
+  const createXHR = window.backend.createXHR;
   const errorDataHandler = window.notices.errorDataHandler;
   const renderPins = window.pin.renderPins;
   const removeCard = window.card.removeCard;
   const mapPinMainStartDrag = window.dragPinMain;
-
   const formReset = window.form.formReset;
   const installDefaultForm = window.form.installDefaultForm;
   const setAddressValue = window.form.setAddressValue;
   const validateForm = window.validateForm.validate;
+
   const map = window.variables.map.map;
   const mapPinMain = window.variables.map.mapPinMain;
   const mapPins = window.variables.map.mapPins;
   const adForm = window.variables.form.adForm;
   const adFormFieldset = window.variables.form.adFormFieldset;
   const adFormAddress = window.variables.form.adFormAddress;
-  const backMapPinMain = window.backMapPinMain;
 
+  const DATA_URL = window.constants.DATA_URL;
   const pinTemplate = document.querySelector(`#pin`).content.querySelector(`.map__pin`);
   const mapFiltersFieldset = document.querySelectorAll(`.map__filters fieldset`);
   const mapFiltersSelect = document.querySelectorAll(`.map__filters select`);
 
+  const backMapPinMain = {
+    "left": mapPinMain.style.left,
+    "top": mapPinMain.style.top
+  };
 
   /*
   * Переключатель атрибута disabled
@@ -64,7 +68,7 @@
     makeDisabled.remove(mapFiltersFieldset);
     makeDisabled.remove(mapFiltersSelect);
 
-    downloadData(successDataHandler, errorDataHandler);
+    createXHR(successDataHandler, errorDataHandler, `GET`, DATA_URL);
 
     mapPinMain.addEventListener(`mousedown`, mapPinMainStartDrag);
   }
@@ -105,7 +109,7 @@
 
   window.map = {
     setInactive,
-    makeWork,
+    makeWork
   };
 
 })();
