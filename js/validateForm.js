@@ -4,7 +4,7 @@
 */
 (function () {
   const TYPE_MIN_PRICE = window.constants.TYPE_MIN_PRICE;
-  const send = window.backend.send;
+  const save = window.backend.save;
   const sendIsSuccess = window.notices.sendIsSuccess;
   const sendIsError = window.notices.sendIsError;
 
@@ -148,7 +148,7 @@
   * Слушает форму
   */
   const submitHandler = function (evt) {
-    send(new FormData(adForm), sendIsSuccess, sendIsError);
+    save(new FormData(adForm), sendIsSuccess, sendIsError);
     evt.preventDefault();
   };
 
