@@ -5,7 +5,7 @@
 */
 (function () {
   const TIMEOUT = window.constants.TIMEOUT;
-  const DATA_URL = `https://21.javascript.pages.academy/keksobooking/data1`;
+  const DATA_URL = `https://21.javascript.pages.academy/keksobooking/data`;
   const URL_POST = `https://21.javascript.pages.academy/keksobooking`;
 
   const StatusCode = {
