@@ -39,11 +39,9 @@
   * @return {string} TYPES[value] - в случае успеха возвращает свойство найденного ключа.
   * @return {string} `` - в случае неудачи возвращает пустую строку.
   */
-  function findElement(value) {
-    const TYPES = window.constants.TYPES;
-    return TYPES[value] || ``;
+  function findElement(object, value) {
+    return object[value] || ``;
   }
-
 
   /*
   * Найти координаты метки
@@ -104,6 +102,52 @@
     element.remove();
   }
 
+  /*
+  * Переключатель атрибута disabled
+  */
+  const makeDisabled = {
+    "set": function (element) {
+      for (let i = 0; i < element.length; i++) {
+        element[i].setAttribute(`disabled`, true);
+      }
+    },
+    "remove": function (element) {
+      for (let i = 0; i < element.length; i++) {
+        element[i].removeAttribute(`disabled`, true);
+      }
+    }
+  };
+
+  /*
+  * Разметка модального окна с ошибкой (при ошибки загрузки данных с сервера)
+  */
+  function modalLayout(errorMessage) {
+    const node = document.createElement(`div`);
+    node.id = `modal`;
+    node.style = `z-index: 100; display: flex; justify-content: center; min-height: 50px; margin: auto; padding: 15px; background-color: white; border: 2px solid SkyBlue; border-radius: 10px`;
+    node.style.position = `fixed`;
+    node.style.left = 0;
+    node.style.right = 0;
+    node.style.fontSize = `26px`;
+
+    const p = document.createElement(`p`);
+    p.style = `display: inherit`;
+    p.textContent = errorMessage;
+
+    const button = document.createElement(`button`);
+    button.id = `modalButton`;
+    button.style = `display: block; width: 40px; height: 20px; border-radius: 4px; border-color: SkyBlue; background-color: seashell; outline-color: SkyBlue`;
+    button.style.position = `absolute`;
+    button.style.bottom = `2px`;
+    button.style.fontSize = `12px`;
+    button.textContent = `OK`;
+
+    node.appendChild(p);
+    node.appendChild(button);
+
+    return node;
+  }
+
 
   window.util = {
     sizeOfElement,
@@ -112,7 +156,9 @@
     getCoordinateOfPinMain,
     getCoordinateCenterOfPinMain,
     getPositionOfElement,
-    closeCard
+    closeCard,
+    makeDisabled,
+    modalLayout
   };
 
 })();

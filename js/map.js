@@ -2,9 +2,10 @@
 
 (function () {
   const getCoordinateCenterOfPinMain = window.util.getCoordinateCenterOfPinMain;
+  const makeDisabled = window.util.makeDisabled;
   const load = window.backend.load;
+  const successDataHandler = window.notices.successDataHandler;
   const errorDataHandler = window.notices.errorDataHandler;
-  const renderPins = window.pin.renderPins;
   const removeCard = window.card.removeCard;
   const mapPinMainStartDrag = window.dragPinMain;
   const formReset = window.form.formReset;
@@ -14,12 +15,10 @@
 
   const map = window.variables.map.map;
   const mapPinMain = window.variables.map.mapPinMain;
-  const mapPins = window.variables.map.mapPins;
   const adForm = window.variables.form.adForm;
   const adFormFieldset = window.variables.form.adFormFieldset;
   const adFormAddress = window.variables.form.adFormAddress;
 
-  const pinTemplate = document.querySelector(`#pin`).content.querySelector(`.map__pin`);
   const mapFiltersFieldset = document.querySelectorAll(`.map__filters fieldset`);
   const mapFiltersSelect = document.querySelectorAll(`.map__filters select`);
 
@@ -28,34 +27,7 @@
     "top": mapPinMain.style.top
   };
 
-  /*
-  * Переключатель атрибута disabled
-  */
-  const makeDisabled = {
-    "set": function (element) {
-      for (let i = 0; i < element.length; i++) {
-        element[i].setAttribute(`disabled`, true);
-      }
-    },
-    "remove": function (element) {
-      for (let i = 0; i < element.length; i++) {
-        element[i].removeAttribute(`disabled`, true);
-      }
-    }
-  };
 
-
-  /*
-  * В случае успешной загрузки данных с сервера...
-  */
-  const successDataHandler = function (data) {
-    mapPins.append(renderPins(pinTemplate, data));
-  };
-
-
-  /*
-  * ...Запускает активное состояние страницы с нужными установками (В случае успешной загрузки данных с сервера)
-  */
   function setActive() {
     installDefaultForm();
     validateForm();
@@ -108,7 +80,7 @@
 
   window.map = {
     setInactive,
-    makeWork
+    makeWork,
   };
 
 })();
