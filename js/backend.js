@@ -4,18 +4,24 @@
 * TIMEOUT 10000 = 10s
 */
 (function () {
+  const TIMEOUT = window.constants.TIMEOUT;
   const DATA_URL = `https://21.javascript.pages.academy/keksobooking/data`;
-  const TIMEOUT = 10000;
+  const URL_POST = `https://21.javascript.pages.academy/keksobooking`;
 
   const StatusCode = {
-    OK: 200
+    OK: 200,
+    BAD_REQUEST: 400,
+    NOT_FOUND: 404
   };
 
 
-  const downloadData = function (onSuccess, onError) {
+  function createXHR(onSuccess, onError, method, url, data) {
     const xhr = new XMLHttpRequest();
     xhr.responseType = `json`;
 
+    xhr.timeout = TIMEOUT;
+    xhr.open(method, url);
+    xhr.send(data);
 
     xhr.addEventListener(`load`, function () {
       let error = ``;
@@ -24,10 +30,10 @@
           onSuccess(xhr.response);
           break;
 
-        case 400:
+        case StatusCode.BAD_REQUEST:
           error = `Неверный запрос`;
           break;
-        case 404:
+        case StatusCode.NOT_FOUND:
           error = `Ничего не найдено. (По этому URL пусто)`;
           break;
 
@@ -38,7 +44,6 @@
       if (error) {
         onError(error);
       }
-
     });
 
     xhr.addEventListener(`error`, function () {
@@ -49,12 +54,20 @@
       onError(`Запрос не успел выполниться за ` + TIMEOUT + `мс`);
     });
 
+    return xhr;
+  }
 
-    xhr.open(`GET`, DATA_URL);
-    xhr.send();
+  function load(onSuccess, onError) {
+    createXHR(onSuccess, onError, `GET`, DATA_URL);
+  }
+
+  function save(onSuccess, onError, data) {
+    createXHR(onSuccess, onError, `POST`, URL_POST, data);
+  }
+
+  window.backend = {
+    load,
+    save
   };
 
-  window.load = {
-    downloadData
-  };
 })();

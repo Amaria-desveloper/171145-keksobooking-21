@@ -3,17 +3,21 @@
 */
 'use strict';
 (function () {
-  const TYPE_MIN_PRICE = window.constants.TYPE_MIN_PRICE;
+  const save = window.backend.save;
+  const sendIsSuccess = window.notices.sendIsSuccess;
+  const sendIsError = window.notices.sendIsError;
 
+  const TYPE_MIN_PRICE = window.constants.TYPE_MIN_PRICE;
+  const DEPENCE_ROOM_GUESTS = window.constants.DEPENCE_ROOM_GUESTS;
+  const adForm = window.variables.form.adForm;
   const adFormAvatar = window.variables.form.adFormAvatar;
   const adFormType = window.variables.form.adFormType;
   const adFormPrice = window.variables.form.adFormPrice;
   const adFormCapacity = window.variables.form.adFormCapacity;
   const adFormImages = window.variables.form.adFormImages;
+  const adFormRoomNumber = window.variables.form.adFormRoomNumber;
 
   const adFormTitle = document.querySelector(`#title`);
-  const adFormRoomNumber = document.querySelector(`#room_number`);
-  const DEPENCE_ROOM_GUESTS = window.constants.DEPENCE_ROOM_GUESTS;
 
 
   /*
@@ -109,7 +113,7 @@
 
     const priceHandlerBlur = function (evt) {
       evt.preventDefault();
-      makeCheckInput((adFormPrice.value > TYPE_MIN_PRICE[value] || ``), (`Цена не менее ` + TYPE_MIN_PRICE[value]), (adFormType.value > 1000000), (`Цена не более 1 000 000`), adFormPrice);
+      makeCheckInput((adFormType.value < TYPE_MIN_PRICE[value] || ``), (`Цена не менее ` + TYPE_MIN_PRICE[value]), (adFormType.value > 1000000), (`Цена не более 1 000 000`), adFormPrice);
     };
 
     adFormPrice.addEventListener(`blur`, priceHandlerBlur);
@@ -143,6 +147,11 @@
   /*
   * Слушает форму
   */
+  const submitHandler = function (evt) {
+    evt.preventDefault();
+    save(sendIsSuccess, sendIsError, new FormData(adForm));
+  };
+
   function validate() {
     adFormRoomNumber.addEventListener(`change`, roomNumberChangeHandler);
     adFormTitle.addEventListener(`input`, titleHandlerInput);
@@ -151,8 +160,11 @@
     adFormImages.addEventListener(`change`, imagesHandlerChange);
   }
 
+  adForm.addEventListener(`submit`, submitHandler);
+
 
   window.validateForm = {
     validate
   };
+
 })();

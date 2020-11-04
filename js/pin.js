@@ -3,6 +3,8 @@
 * Манипуляции с DOM-элементом <map__pin>.
 */
 (function () {
+  const closeCard = window.util.closeCard;
+
   const setupCard = window.card.setupCard;
   const mapPins = window.variables.map.mapPins;
   const cardTemplate = document.querySelector(`#card`).content.querySelector(`.map__card`);
@@ -61,8 +63,20 @@
     return fragment;
   }
 
+  /*
+* Удаляет все отрисованные Пины
+*/
+  function removeCurrentPins() {
+    let currentPins = mapPins.querySelectorAll(`.map__pin:not(.map__pin--main)`);
+    for (let pin of currentPins) {
+      closeCard(pin);
+    }
+  }
+
+
   window.pin = {
-    renderPins
+    renderPins,
+    removeCurrentPins
   };
 
 })();

@@ -2,19 +2,23 @@
 
 (function () {
   const TYPE_MIN_PRICE = window.constants.TYPE_MIN_PRICE;
+  const closeCard = window.util.closeCard;
 
+  const adForm = window.variables.form.adForm;
   const adFormAddress = window.variables.form.adFormAddress;
   const adFormAvatar = window.variables.form.adFormAvatar;
   const adFormType = window.variables.form.adFormType;
   const adFormPrice = window.variables.form.adFormPrice;
   const adFormCapacity = window.variables.form.adFormCapacity;
   const adFormImages = window.variables.form.adFormImages;
+  const adFormRoomNumber = window.variables.form.adFormRoomNumber;
 
   const adFormTimeIn = document.querySelector(`#timein`);
   const adFormTimeOut = document.querySelector(`#timeout`);
   const adFormAvatarPreview = document.querySelector(`.ad-form-header__preview img`);
   const adFormPhoto = document.querySelector(`.ad-form__photo`);
   const containerAdFormPhoto = document.querySelector(`.ad-form__photo-container`);
+  const adFormButtonReset = document.querySelector(`.ad-form__reset`);
 
 
   /*
@@ -34,6 +38,7 @@
   * Устанавливает форму в инициализирующее состояние.
   */
   function installDefaultForm() {
+
     for (let i = 1; i < adFormCapacity.length; i++) {
       adFormCapacity[i].setAttribute(`style`, `display: none`);
     }
@@ -93,10 +98,50 @@
     }
   }
 
+  /*
+  * Сбросить превью загруженных фото
+  */
+  function removeImagesPreview() {
+    const loadedPhotos = containerAdFormPhoto.querySelectorAll(`img`);
+    const loadedPhotoWrappers = containerAdFormPhoto.querySelectorAll(`.ad-form__photo`);
+
+    for (let photo of loadedPhotos) {
+      closeCard(photo);
+    }
+
+    for (let i = 1; i < loadedPhotoWrappers.length; i++) {
+      closeCard(loadedPhotoWrappers[i]);
+    }
+
+    adFormAvatarPreview.src = `img/muffin-grey.svg`;
+  }
+
+  /*
+  * Сбросить форму
+  */
+  function formReset(form) {
+    form.reset();
+    removeImagesPreview();
+    adFormRoomNumber.selectedIndex = 0;
+    adFormCapacity.selectedIndex = 0;
+  }
+
+
+  const formButtonResetHandler = function (evt) {
+    evt.preventDefault();
+    formReset(adForm);
+    window.main.restartPage();
+  };
+
+  adFormButtonReset.addEventListener(`click`, formButtonResetHandler);
+
+
   window.form = {
     setAddressValue,
     installDefaultForm,
     showAvatarPreview,
-    showImagesPreview
+    showImagesPreview,
+    formReset
   };
+
 })();
