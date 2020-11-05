@@ -4,29 +4,32 @@
 */
 (function () {
   const closeCard = window.util.closeCard;
-
+  const makeFilter = window.makeFilter.makeFilter;
   const setupCard = window.card.setupCard;
-  const mapPins = window.variables.map.mapPins;
-  const cardTemplate = document.querySelector(`#card`).content.querySelector(`.map__card`);
+  const removeCard = window.card.removeCard;
 
+  const QUANTITY_PINS = window.constants.QUANTITY_PINS;
+
+  const mapPins = window.variables.map.mapPins;
+  const pinTemplate = document.querySelector(`#pin`).content.querySelector(`.map__pin`);
 
   /**
   * Генерирует DOM-элемент для Пина. Слушает клик по выбранному Пину.
   * @external Node
-  * @param {external:Node} template - шаблон Пина.
   * @param {Array.<Object>} data - массив из объекта. Данные для шаблона.
   * @param {Number} index - номер элемента массива data.
   * @return {external:Node} element - разметка одного Пина с информацией и стилями.
   */
-  function setupPin(template, data, index) {
-    let element = template.cloneNode(true);
+  function setupPin(data, index) {
+    let element = pinTemplate.cloneNode(true);
     element.querySelector(`img`).src = data[index].author.avatar;
     element.querySelector(`img`).alt = data[index].offer.title;
     element.style.left = data[index].location.x + `px`;
     element.style.top = data[index].location.y + `px`;
 
-    element.addEventListener(`click`, function (evt) {
-      pinChoiceClickHandler(evt, data[index]);
+    element.addEventListener(`click`, function () {
+      pinChoiceClickHandler(data[index], element);
+
     });
 
     return element;
@@ -35,15 +38,21 @@
 
   /*
   * Ловит выбор Пина на карте.
-  * @param {MyEvent} evt - нажатие клавиши или кнопки мыши.
+  * @param {} element - переданный текущий Пин.
   * @param {Object} card - Объект с данными для карточки объявления.
   */
-  const pinChoiceClickHandler = function (evt, card) {
+  const pinChoiceClickHandler = function (card, element) {
     let mapCard = document.querySelector(`.map__card`);
     if (mapCard !== null) {
-      mapCard.remove();
+      closeCard(mapCard);
     }
-    mapPins.append(setupCard(cardTemplate, card));
+
+    if (mapPins.querySelector(`.map__pin--active`)) {
+      mapPins.querySelector(`.map__pin--active`).classList.remove(`map__pin--active`);
+    }
+    element.classList.add(`map__pin--active`);
+
+    mapPins.append(setupCard(card, element));
   };
 
 
@@ -55,13 +64,27 @@
   * @param {function} offset - размеры для учёта смещения метки.
   * @return (HTMLElement) fragment - возвращает #document-fragment. Созданное множество Пинов.
   */
-  function renderPins(template, data) {
+  function renderPins(data, showQuantity) {
     let fragment = document.createDocumentFragment();
-    for (let i = 0; i < data.length; i++) {
-      fragment.appendChild(setupPin(template, data, i));
+    for (let i = 0; i < showQuantity; i++) {
+      fragment.appendChild(setupPin(data, i));
     }
     return fragment;
   }
+
+  /*
+  * Генерирует множество Пинов со свойством Offer
+  */
+  function generateAvailablePins(pins) {
+    let newPins = [];
+    for (let i = 0; i < pins.length; i++) {
+      if (pins[i].offer !== undefined) {
+        newPins.push(pins[i]);
+      }
+    }
+    return newPins;
+  }
+
 
   /*
 * Удаляет все отрисованные Пины
@@ -74,9 +97,37 @@
   }
 
 
+  /*
+  * Добавляет Пины на карту
+  */
+  const addPinOnMap = function (data) {
+    let advertsAll = data;
+    let adverts = generateAvailablePins(advertsAll);
+
+    const filterTypeChangeHandler = function (evt) {
+      removeCurrentPins();
+      removeCard();
+
+      let filteredAdverts = makeFilter(adverts, evt.target.value);
+      let filteredAdvertsLength = filteredAdverts.length;
+
+      if (filteredAdvertsLength < QUANTITY_PINS) {
+        mapPins.append(renderPins(filteredAdverts, filteredAdvertsLength));
+      } else {
+        mapPins.append(renderPins(filteredAdverts, QUANTITY_PINS));
+      }
+    };
+
+    const mapFiltersHousingType = document.querySelector(`.map__filters select[name="housing-type"]`);
+    mapFiltersHousingType.addEventListener(`change`, filterTypeChangeHandler);
+  };
+
+
   window.pin = {
     renderPins,
-    removeCurrentPins
+    removeCurrentPins,
+    generateAvailablePins,
+    addPinOnMap
   };
 
 })();

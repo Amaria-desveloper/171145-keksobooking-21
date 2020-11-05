@@ -3,6 +3,7 @@
 (function () {
 
   window.constants = {
+    QUANTITY_PINS: 5,
 
     TYPES: {
       flat: `Квартира`,
