@@ -25,7 +25,7 @@
     element.querySelector(`.popup__text--address`).textContent = card.offer.address;
     element.querySelector(`.popup__text--price`).textContent = card.offer.price + `₽/ночь`;
     element.querySelector(`.popup__type`).textContent = findElement(TYPES, card.offer.type);
-    element.querySelector(`.popup__text--capacity`).textContent = `Комнат: ` + card.offer.rooms + `, ` + card.offer.guests;
+    element.querySelector(`.popup__text--capacity`).textContent = `Комнат: ` + card.offer.rooms + `, кол-во спальных мест: ` + card.offer.guests;
     element .querySelector(`.popup__text--time`).textContent = `Заезд после ` + card.offer.checkin + `, выезд до ` + card.offer.checkout;
 
     const FEATURES = window.constants.FEATURES;
