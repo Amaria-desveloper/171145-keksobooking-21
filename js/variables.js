@@ -9,7 +9,8 @@
         map: document.querySelector(`.map`),
         mapPins: document.querySelector(`.map__pins`),
         mapPin: document.querySelector(`.map__pin`),
-        mapPinMain: document.querySelector(`.map__pin--main`)
+        mapPinMain: document.querySelector(`.map__pin--main`),
+        mapFilter: document.querySelector(`.map__filters`)
       },
       "form": {
         adForm: document.querySelector(`.ad-form`),

@@ -4,13 +4,14 @@
 */
 (function () {
   const closeCard = window.util.closeCard;
-  const makeFilter = window.makeFilter.makeFilter;
+  const makeFilter = window.filter.makeFilter;
   const setupCard = window.card.setupCard;
   const removeCard = window.card.removeCard;
 
   const QUANTITY_PINS = window.constants.QUANTITY_PINS;
 
   const mapPins = window.variables.map.mapPins;
+  const mapFilter = window.variables.map.mapFilter;
   const pinTemplate = document.querySelector(`#pin`).content.querySelector(`.map__pin`);
 
   /**
@@ -101,14 +102,16 @@
   * Добавляет Пины на карту
   */
   const addPinOnMap = function (data) {
+
     let advertsAll = data;
     let adverts = generateAvailablePins(advertsAll);
 
-    const filterTypeChangeHandler = function (evt) {
+
+    const filterTypeChangeHandler = function () {
       removeCurrentPins();
       removeCard();
 
-      let filteredAdverts = makeFilter(adverts, evt.target.value);
+      let filteredAdverts = makeFilter(adverts);
       let filteredAdvertsLength = filteredAdverts.length;
 
       if (filteredAdvertsLength < QUANTITY_PINS) {
@@ -118,10 +121,8 @@
       }
     };
 
-    const mapFiltersHousingType = document.querySelector(`.map__filters select[name="housing-type"]`);
-    mapFiltersHousingType.addEventListener(`change`, filterTypeChangeHandler);
+    mapFilter.addEventListener(`change`, filterTypeChangeHandler);
   };
-
 
   window.pin = {
     renderPins,

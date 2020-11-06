@@ -7,6 +7,7 @@
   const closeCard = window.util.closeCard;
 
   const TYPES = window.constants.TYPES;
+  const FEATURES = window.constants.FEATURES;
 
   const cardTemplate = document.querySelector(`#card`).content.querySelector(`.map__card`);
 
@@ -28,12 +29,11 @@
     element.querySelector(`.popup__text--capacity`).textContent = `Комнат: ` + card.offer.rooms + `, кол-во спальных мест: ` + card.offer.guests;
     element .querySelector(`.popup__text--time`).textContent = `Заезд после ` + card.offer.checkin + `, выезд до ` + card.offer.checkout;
 
-    const FEATURES = window.constants.FEATURES;
-    for (let j = 0; j < FEATURES.length; j++) {
-      if (card.offer.features.includes(FEATURES[j], 0) === false) {
-        element.querySelector(`.popup__feature`).remove();
+    FEATURES.filter(function (feature) {
+      if (!card.offer.features.includes(feature)) {
+        element.querySelector(`.popup__feature--` + feature).remove();
       }
-    }
+    });
 
     element.querySelector(`.popup__description`).textContent = card.offer.description;
 
@@ -56,7 +56,6 @@
         }
       }
     }
-
 
     const popupButtonCloseClickHandler = function () {
       closeCard(element);

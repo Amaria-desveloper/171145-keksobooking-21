@@ -148,7 +148,7 @@
   * Слушает форму
   */
   const submitHandler = function (evt) {
-    save(new FormData(adForm), sendIsSuccess, sendIsError);
+    save(sendIsSuccess, sendIsError, new FormData(adForm));
     evt.preventDefault();
   };
 
