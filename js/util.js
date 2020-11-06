@@ -98,7 +98,7 @@
   * Закрывает карточку. Удаляет узел из DOM.
   *
   */
-  function closeCard(element) {
+  function close(element) {
     element.remove();
   }
 
@@ -156,9 +156,8 @@
     getCoordinateOfPinMain,
     getCoordinateCenterOfPinMain,
     getPositionOfElement,
-    closeCard,
+    close,
     makeDisabled,
-    modalLayout
+    modalLayout,
   };
-
 })();

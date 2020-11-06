@@ -4,7 +4,7 @@
 */
 (function () {
   const findElement = window.util.findElement;
-  const closeCard = window.util.closeCard;
+  const close = window.util.close;
 
   const TYPES = window.constants.TYPES;
   const FEATURES = window.constants.FEATURES;
@@ -24,14 +24,14 @@
     element.querySelector(`.popup__avatar`).src = card.author.avatar;
     element.querySelector(`.popup__title`).textContent = card.offer.title;
     element.querySelector(`.popup__text--address`).textContent = card.offer.address;
-    element.querySelector(`.popup__text--price`).textContent = card.offer.price + `₽/ночь`;
+    element.querySelector(`.popup__text--price`).textContent = `${card.offer.price} ₽/ночь`;
     element.querySelector(`.popup__type`).textContent = findElement(TYPES, card.offer.type);
-    element.querySelector(`.popup__text--capacity`).textContent = `Комнат: ` + card.offer.rooms + `, кол-во спальных мест: ` + card.offer.guests;
-    element .querySelector(`.popup__text--time`).textContent = `Заезд после ` + card.offer.checkin + `, выезд до ` + card.offer.checkout;
+    element.querySelector(`.popup__text--capacity`).textContent = `Комнат: ${card.offer.rooms}, кол-во спальных мест: ${card.offer.guests}`;
+    element .querySelector(`.popup__text--time`).textContent = `Заезд после ${card.offer.checkin}, выезд до ${card.offer.checkout}`;
 
     FEATURES.filter(function (feature) {
       if (!card.offer.features.includes(feature)) {
-        element.querySelector(`.popup__feature--` + feature).remove();
+        element.querySelector(`.popup__feature--${feature}`).remove();
       }
     });
 
@@ -57,15 +57,15 @@
       }
     }
 
-    const popupButtonCloseClickHandler = function () {
-      closeCard(element);
+    const popupButtonCloseClickHandler = function popupButtonCloseClickHandler() {
+      close(element);
       pin.classList.remove(`map__pin--active`);
     };
 
-    const popupButtonEscHandler = function (evt) {
+    const popupButtonEscHandler = function popupButtonEscHandler(evt) {
       if (evt.key === `Escape`) {
         evt.preventDefault();
-        closeCard(element);
+        close(element);
       }
       document.removeEventListener(`keydown`, popupButtonEscHandler);
     };
@@ -79,13 +79,12 @@
   function removeCard() {
     const mapCard = document.querySelector(`.map__card`);
     if (mapCard) {
-      closeCard(mapCard);
+      close(mapCard);
     }
   }
 
   window.card = {
     setupCard,
-    removeCard
+    removeCard,
   };
-
 })();

@@ -24,7 +24,7 @@
 
   const backMapPinMain = {
     "left": mapPinMain.style.left,
-    "top": mapPinMain.style.top
+    "top": mapPinMain.style.top,
   };
 
 
@@ -82,5 +82,4 @@
     setInactive,
     makeWork,
   };
-
 })();

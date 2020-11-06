@@ -1,7 +1,6 @@
 'use strict';
 
 (function () {
-
   function getInteger(min, max) {
     return Math.floor(min + Math.random() * (max + 1 - min));
   }
@@ -19,8 +18,7 @@
   window.random = {
     getInteger,
     getArrIndex,
-    getArr
+    getArr,
   };
-
 })();
 

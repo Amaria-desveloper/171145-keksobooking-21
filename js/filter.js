@@ -12,7 +12,6 @@
 
 
   function makeFilter(data) {
-
     function getValueChecked() {
       let mapFilterHousingFeatures = mapFilter.querySelectorAll(`.map__filters .map__features input[name="features"]:checked`);
       let valueChecked = [];
@@ -28,12 +27,12 @@
         type: mapFiltersHousingType.value,
         price: {
           min: 0,
-          max: Infinity
+          max: Infinity,
         },
 
         rooms: ``,
         guests: ``,
-        features: getValueChecked()
+        features: getValueChecked(),
       };
 
       if (mapFiltersHousingType.value === `any`) {
@@ -82,7 +81,6 @@
 
 
   window.filter = {
-    makeFilter
+    makeFilter,
   };
-
 })();

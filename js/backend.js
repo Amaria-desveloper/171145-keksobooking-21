@@ -12,7 +12,7 @@
     OK: 200,
     BAD_REQUEST: 400,
     NOT_FOUND: 404,
-    INTERNAL: 500
+    INTERNAL: 500,
   };
 
 
@@ -42,7 +42,7 @@
           break;
 
         default:
-          onError(`Статус ответа: ` + xhr.status + ` ` + xhr.statusText);
+          onError(`Статус ответа: ${xhr.status} ${xhr.statusText}`);
       }
 
       if (error) {
@@ -55,7 +55,7 @@
     });
 
     xhr.addEventListener(`timeout`, function () {
-      onError(`Запрос не успел выполниться за ` + TIMEOUT + `мс`);
+      onError(`Запрос не успел выполниться за ${TIMEOUT} мс`);
     });
 
     return xhr;
@@ -71,7 +71,6 @@
 
   window.backend = {
     load,
-    save
+    save,
   };
-
 })();

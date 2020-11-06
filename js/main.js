@@ -28,8 +28,6 @@
 
 
   window.main = {
-    restartPage
+    restartPage,
   };
-
-
 })();

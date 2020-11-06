@@ -35,7 +35,7 @@
       y: evt.clientY
     };
 
-    const mouseMoveHandler = function (moveEvt) {
+    const mouseMoveHandler = function mouseMoveHandler(moveEvt) {
       moveEvt.preventDefault();
 
       const shift = {
@@ -76,5 +76,4 @@
 
 
   window.dragPinMain = mapPinMainStartDrag;
-
 })();

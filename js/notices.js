@@ -3,7 +3,7 @@
 * Модальные окна с сообщениями для пользователя
 */
 (function () {
-  const closeCard = window.util.closeCard;
+  const close = window.util.close;
   const addPinOnMap = window.pin.addPinOnMap;
   const modalLayout = window.util.modalLayout;
 
@@ -14,37 +14,37 @@
   /*
   * В случае успешной загрузки данных с сервера...
   */
-  const successDataHandler = function (data) {
+  function successDataHandler(data) {
     addPinOnMap(data);
-  };
+  }
 
 
   /*
   * В случае ошибки загрузки данных с сервера: формируется окно с сообщением
   * @param {String} errorMessage. errorMessage - на выбор в load.js
   */
-  const errorDataHandler = function (errorMessage) {
+  function errorDataHandler(errorMessage) {
     document.body.insertAdjacentElement(`afterbegin`, modalLayout(errorMessage));
     const modal = document.querySelector(`#modal`);
     const button = document.querySelector(`#modalButton`);
     button.focus();
 
-    const buttonClickHandler = function (evt) {
+    const buttonClickHandler = function buttonClickHandler(evt) {
       evt.preventDefault();
-      closeCard(modal);
+      close(modal);
     };
 
-    const buttonEscHandler = function (evt) {
+    const buttonEscHandler = function buttonEscHandler(evt) {
       if (evt.key === `Escape`) {
         evt.preventDefault();
-        closeCard(modal);
+        close(modal);
       }
       document.removeEventListener(`keydown`, buttonEscHandler);
     };
 
     button.addEventListener(`click`, buttonClickHandler);
     document.addEventListener(`keydown`, buttonEscHandler);
-  };
+  }
 
 
   /*
@@ -54,29 +54,29 @@
   /*
   * Ловит событие на закрытие модального окна с сообщением для пользователя
   */
-  const messageCloseHandler = function () {
+  function messageCloseClickHandler() {
     let modalSuccess = document.querySelector(`.success`);
     let modalError = document.querySelector(`.error`);
 
     if (modalError) {
-      closeCard(modalError);
+      close(modalError);
     }
 
     if (modalSuccess) {
-      closeCard(modalSuccess);
+      close(modalSuccess);
     }
 
-    document.removeEventListener(`click`, messageCloseHandler);
+    document.removeEventListener(`click`, messageCloseClickHandler);
     document.removeEventListener(`keydown`, messageCloseEscHandler);
-  };
+  }
 
   /*
   * Ловит esc на закрытие модального окна
   */
-  const messageCloseEscHandler = function (evt) {
+  const messageCloseEscHandler = function messageCloseEscHandler(evt) {
     if (evt.key === `Escape`) {
       evt.preventDefault();
-      messageCloseHandler();
+      messageCloseClickHandler();
     }
   };
 
@@ -106,7 +106,7 @@
 
     window.main.restartPage();
 
-    document.addEventListener(`click`, messageCloseHandler);
+    document.addEventListener(`click`, messageCloseClickHandler);
     document.addEventListener(`keydown`, messageCloseEscHandler);
   }
 
@@ -120,7 +120,7 @@
     const modalError = document.querySelector(`.error`);
     const errorMessageButton = modalError.querySelector(`.error__button`);
 
-    errorMessageButton.addEventListener(`click`, messageCloseHandler);
+    errorMessageButton.addEventListener(`click`, messageCloseClickHandler);
     document.addEventListener(`keydown`, messageCloseEscHandler);
   }
 
@@ -129,7 +129,6 @@
     errorDataHandler,
     sendIsSuccess,
     sendIsError,
-    successDataHandler
+    successDataHandler,
   };
-
 })();
