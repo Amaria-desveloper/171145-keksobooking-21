@@ -4,6 +4,7 @@
 */
 (function () {
   const close = window.util.close;
+  const debounce = window.util.debounce;
   const makeFilter = window.filter.makeFilter;
   const setupCard = window.card.setupCard;
   const removeCard = window.card.removeCard;
@@ -122,7 +123,7 @@
       }
     };
 
-    mapFilter.addEventListener(`change`, filterTypeChangeHandler);
+    mapFilter.addEventListener(`change`, debounce(filterTypeChangeHandler));
   };
 
   window.pin = {

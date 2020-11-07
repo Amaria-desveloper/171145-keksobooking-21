@@ -120,6 +120,20 @@
   };
 
 
+  const debounce = (cb) => {
+    const TIMEOUT = 500;
+    let lastTimeout = null;
+
+    return (...parameters) => {
+      if (lastTimeout) {
+        window.clearTimeout(lastTimeout);
+      }
+      lastTimeout = window.setTimeout(() => {
+        cb(...parameters);
+      }, TIMEOUT);
+    };
+  };
+
   window.util = {
     sizeOfElement,
     getOffset,
@@ -129,5 +143,6 @@
     close,
     makeDisabled,
     modalLayout,
+    debounce,
   };
 })();
