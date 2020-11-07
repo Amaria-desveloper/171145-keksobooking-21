@@ -21,7 +21,7 @@
   * @param {Number} index - номер элемента массива data.
   * @return {external:Node} element - разметка одного Пина с информацией и стилями.
   */
-  function setupPin(data, index) {
+  const setupPin = (data, index) => {
     let element = pinTemplate.cloneNode(true);
     element.querySelector(`img`).src = data[index].author.avatar;
     element.querySelector(`img`).alt = data[index].offer.title;
@@ -33,7 +33,7 @@
     });
 
     return element;
-  }
+  };
 
 
   /*
@@ -64,18 +64,18 @@
   * @param {function} offset - размеры для учёта смещения метки.
   * @return (HTMLElement) fragment - возвращает #document-fragment. Созданное множество Пинов.
   */
-  function renderPins(data, showQuantity) {
+  const renderPins = (data, showQuantity) => {
     let fragment = document.createDocumentFragment();
     for (let i = 0; i < showQuantity; i++) {
       fragment.appendChild(setupPin(data, i));
     }
     return fragment;
-  }
+  };
 
   /*
   * Генерирует множество Пинов со свойством Offer
   */
-  function generateAvailablePins(pins) {
+  const generateAvailablePins = (pins) => {
     let newPins = [];
     for (let i = 0; i < pins.length; i++) {
       if (pins[i].offer !== undefined) {
@@ -83,24 +83,24 @@
       }
     }
     return newPins;
-  }
+  };
 
 
   /*
 * Удаляет все отрисованные Пины
 */
-  function removeCurrentPins() {
+  const removeCurrentPins = () => {
     let currentPins = mapPins.querySelectorAll(`.map__pin:not(.map__pin--main)`);
     for (let pin of currentPins) {
       close(pin);
     }
-  }
+  };
 
 
   /*
   * Добавляет Пины на карту
   */
-  function addPinOnMap(data) {
+  const addPinOnMap = (data) => {
 
     let advertsAll = data;
     let adverts = generateAvailablePins(advertsAll);
@@ -123,7 +123,7 @@
     };
 
     mapFilter.addEventListener(`change`, filterTypeChangeHandler);
-  }
+  };
 
   window.pin = {
     renderPins,

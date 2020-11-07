@@ -28,16 +28,15 @@
   * @param {function} newValueFrom - Откуда брать координаты. В качестве параметра - функция(getPositionOfElement), которая  высчитывает координаты;
   * @return
   */
-  function setAddressValue(inputElement, newValueFrom) {
-    let newValue = newValueFrom;
-    inputElement.value = newValue;
-  }
+  const setAddressValue = (inputElement, newValueFrom) => {
+    inputElement.value = newValueFrom;
+  };
 
 
   /*
   * Устанавливает форму в инициализирующее состояние.
   */
-  function installDefaultForm() {
+  const installDefaultForm = () => {
     for (let i = 1; i < adFormCapacity.length; i++) {
       adFormCapacity[i].setAttribute(`style`, `display: none`);
     }
@@ -53,11 +52,11 @@
 
     adFormImages.setAttribute(`accept`, `image/*`);
     adFormImages.multiple = true;
-  }
+  };
 
 
   /* синхронизация значений полей Время заезда и выезда */
-  function syncValues(firstElement, secondElement) {
+  const syncValues = (firstElement, secondElement) => {
     firstElement.addEventListener(`change`, function () {
       secondElement.value = firstElement.value;
     });
@@ -65,19 +64,19 @@
     secondElement.addEventListener(`change`, function () {
       firstElement.value = secondElement.value;
     });
-  }
+  };
 
   syncValues(adFormTimeIn, adFormTimeOut);
 
 
   /* показать превью аватара */
-  function showAvatarPreview(fileUploadElement) {
+  const showAvatarPreview = (fileUploadElement) => {
     adFormAvatarPreview.src = URL.createObjectURL(fileUploadElement.files[0]);
-  }
+  };
 
 
   /* Показать превью загруженных картинок */
-  function showImagesPreview(fileUploadElement) {
+  const showImagesPreview = (fileUploadElement) => {
     let photo = document.createElement(`img`);
     photo.setAttribute(`width`, `100%`);
     photo.setAttribute(`height`, `100%`);
@@ -95,12 +94,12 @@
       }
       containerAdFormPhoto.appendChild(fragment);
     }
-  }
+  };
 
   /*
   * Сбросить превью загруженных фото
   */
-  function removeImagesPreview() {
+  const removeImagesPreview = () => {
     const loadedPhotos = containerAdFormPhoto.querySelectorAll(`img`);
     const loadedPhotoWrappers = containerAdFormPhoto.querySelectorAll(`.ad-form__photo`);
 
@@ -113,17 +112,17 @@
     }
 
     adFormAvatarPreview.src = `img/muffin-grey.svg`;
-  }
+  };
 
   /*
   * Сбросить форму
   */
-  function formReset(form) {
+  const formReset = (form) => {
     form.reset();
     removeImagesPreview();
     adFormRoomNumber.selectedIndex = 0;
     adFormCapacity.selectedIndex = 0;
-  }
+  };
 
 
   const formButtonResetHandler = function formButtonResetHandler(evt) {

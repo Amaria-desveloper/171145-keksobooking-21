@@ -26,13 +26,13 @@
   * @param {} message
   * @param {} element
   */
-  function makeCheckSelect(condition, message, element) {
-    let error = function () {
+  const makeCheckSelect = (condition, message, element) => {
+    let error = () => {
       element.setCustomValidity(message);
       element.reportValidity();
     };
 
-    let success = function () {
+    let success = () => {
       element.setCustomValidity(``);
     };
 
@@ -41,7 +41,7 @@
     } else {
       error(message);
     }
-  }
+  };
 
 
   /*
@@ -52,18 +52,18 @@
   * @param {} messageTwo
   * @param {} element - инпут, который проверяется.
   */
-  function makeCheckInput(conditionOne, messageOne, conditionTwo, messageTwo, element) {
-    let errorOne = function () {
+  const makeCheckInput = (conditionOne, messageOne, conditionTwo, messageTwo, element) => {
+    let errorOne = () => {
       element.setCustomValidity(messageOne);
       element.reportValidity();
     };
 
-    let errorTwo = function () {
+    let errorTwo = () => {
       element.setCustomValidity(messageTwo);
       element.reportValidity();
     };
 
-    let success = function () {
+    let success = () => {
       element.setCustomValidity(``);
     };
 
@@ -74,7 +74,7 @@
     } else {
       success();
     }
-  }
+  };
 
 
   /* отлов изменения поля Количество комнат. */
@@ -108,21 +108,21 @@
 
 
   /* Устанавливает цену в плейсхолдер, проверяет введённую цену */
-  function setPriceValue(value, element) {
+  const setPriceValue = (value, element) => {
     element.setAttribute(`min`, TYPE_MIN_PRICE[value]);
     element.placeholder = TYPE_MIN_PRICE[value];
 
-    const priceHandlerBlur = function (evt) {
+    const priceHandlerBlur = function priceHandlerBlur(evt) {
       evt.preventDefault();
       makeCheckInput((adFormType.value < TYPE_MIN_PRICE[value] || ``), (`Цена не менее ` + TYPE_MIN_PRICE[value]), (adFormType.value > 1000000), (`Цена не более 1 000 000`), adFormPrice);
     };
 
     adFormPrice.addEventListener(`blur`, priceHandlerBlur);
-  }
+  };
 
 
   /* Устанавливает вместимость кол-во гостей */
-  function setCapacityValue(selectedValue, selectedElement, setElement) {
+  const setCapacityValue = (selectedValue, selectedElement, setElement) => {
     makeCheckSelect((DEPENCE_ROOM_GUESTS[selectedValue].includes(Number(setElement.value), 0)), `выберите допустимое количество гостей`, setElement);
 
     let selectedElementValue = selectedElement.querySelector(`option[value="` + [selectedValue] + `"]`);
@@ -132,7 +132,7 @@
       setElement[i].setAttribute(`style`, `display: none`);
     }
 
-    DEPENCE_ROOM_GUESTS[selectedValue].forEach(function (item) {
+    DEPENCE_ROOM_GUESTS[selectedValue].forEach((item) => {
       setElement.querySelector(`option[value="` + item + `"]`).setAttribute(`style`, `display: auto`);
     });
 
@@ -142,7 +142,7 @@
     };
 
     adFormCapacity.addEventListener(`change`, capacityChangeHandler);
-  }
+  };
 
 
   /*
@@ -153,13 +153,13 @@
     evt.preventDefault();
   };
 
-  function validate() {
+  const validate = () => {
     adFormRoomNumber.addEventListener(`change`, roomNumberChangeHandler);
     adFormTitle.addEventListener(`input`, titleHandlerInput);
     adFormType.addEventListener(`change`, typeChangeHandler);
     adFormAvatar.addEventListener(`change`, avatarHandlerChange);
     adFormImages.addEventListener(`change`, imagesHandlerChange);
-  }
+  };
 
   adForm.addEventListener(`submit`, submitHandler);
 

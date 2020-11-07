@@ -14,16 +14,16 @@
   /*
   * В случае успешной загрузки данных с сервера...
   */
-  function successDataHandler(data) {
+  const successDataHandler = (data) => {
     addPinOnMap(data);
-  }
+  };
 
 
   /*
   * В случае ошибки загрузки данных с сервера: формируется окно с сообщением
   * @param {String} errorMessage. errorMessage - на выбор в load.js
   */
-  function errorDataHandler(errorMessage) {
+  const errorDataHandler = (errorMessage) => {
     document.body.insertAdjacentElement(`afterbegin`, modalLayout(errorMessage));
     const modal = document.querySelector(`#modal`);
     const button = document.querySelector(`#modalButton`);
@@ -44,7 +44,7 @@
 
     button.addEventListener(`click`, buttonClickHandler);
     document.addEventListener(`keydown`, buttonEscHandler);
-  }
+  };
 
 
   /*
@@ -54,7 +54,7 @@
   /*
   * Ловит событие на закрытие модального окна с сообщением для пользователя
   */
-  function messageCloseClickHandler() {
+  const messageCloseClickHandler = () => {
     let modalSuccess = document.querySelector(`.success`);
     let modalError = document.querySelector(`.error`);
 
@@ -68,7 +68,7 @@
 
     document.removeEventListener(`click`, messageCloseClickHandler);
     document.removeEventListener(`keydown`, messageCloseEscHandler);
-  }
+  };
 
   /*
   * Ловит esc на закрытие модального окна
@@ -85,7 +85,7 @@
   * Формирует и добавляет DOM модальное окно на основе переданного шаблона.
   * @param {} template шаблон
   */
-  function showMessage(template, messageText) {
+  const showMessage = (template, messageText) => {
     const element = template.cloneNode(true);
 
     if (template === errorMessageTemplate) {
@@ -95,26 +95,26 @@
     document.body.insertAdjacentElement(`afterbegin`, element);
     element.tabIndex = 0;
     element.focus();
-  }
+  };
 
 
   /*
   * Если форма отправлена успешно.... верни исходное состояние (f window.main.restartPage)
   */
-  function sendIsSuccess() {
+  const sendIsSuccess = () => {
     showMessage(successMessageTemplate);
 
     window.main.restartPage();
 
     document.addEventListener(`click`, messageCloseClickHandler);
     document.addEventListener(`keydown`, messageCloseEscHandler);
-  }
+  };
 
 
   /*
   * При отправке формы произошла ошибка...
   */
-  function sendIsError(messageText) {
+  const sendIsError = (messageText) => {
     showMessage(errorMessageTemplate, messageText);
 
     const modalError = document.querySelector(`.error`);
@@ -122,7 +122,7 @@
 
     errorMessageButton.addEventListener(`click`, messageCloseClickHandler);
     document.addEventListener(`keydown`, messageCloseEscHandler);
-  }
+  };
 
 
   window.notices = {

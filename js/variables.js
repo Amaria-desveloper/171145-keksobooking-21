@@ -3,7 +3,7 @@
 /*
 * Переменные, используемые в разных модулях.
 */
-  function getVariables() {
+  const getVariables = () => {
     return {
       "map": {
         map: document.querySelector(`.map`),
@@ -22,9 +22,9 @@
         adFormCapacity: document.querySelector(`#capacity`),
         adFormImages: document.querySelector(`#images`),
         adFormRoomNumber: document.querySelector(`#room_number`),
-      }
+      },
     };
-  }
+  };
 
   window.variables = getVariables();
 })();

@@ -17,7 +17,7 @@
     right: getWidth(map) - halfOfPinMain,
   };
 
-  const checkNewPosition = function (property, currentPosition, limitedAreaStart, limitedAreaEnd) {
+  const checkNewPosition = (property, currentPosition, limitedAreaStart, limitedAreaEnd) => {
     if (currentPosition < limitedAreaStart) {
       mapPinMain.style[property] = limitedAreaStart + `px`;
     } else if (currentPosition > limitedAreaEnd) {
@@ -27,7 +27,7 @@
     }
   };
 
-  const mapPinMainStartDrag = function (evt) {
+  const mapPinMainMouseDownHandler = function mapPinMainMouseDownHandler(evt) {
     evt.preventDefault();
 
     let startCoordinates = {
@@ -40,17 +40,17 @@
 
       const shift = {
         x: startCoordinates.x - moveEvt.clientX,
-        y: startCoordinates.y - moveEvt.clientY
+        y: startCoordinates.y - moveEvt.clientY,
       };
 
       startCoordinates = {
         x: moveEvt.clientX,
-        y: moveEvt.clientY
+        y: moveEvt.clientY,
       };
 
       const movedCoordinates = {
         x: mapPinMain.offsetLeft - shift.x,
-        y: mapPinMain.offsetTop - shift.y
+        y: mapPinMain.offsetTop - shift.y,
       };
 
       checkNewPosition(`left`, movedCoordinates.x, limitedArea.left, limitedArea.right);
@@ -75,5 +75,5 @@
   };
 
 
-  window.dragPinMain = mapPinMainStartDrag;
+  window.dragPinMain = mapPinMainMouseDownHandler;
 })();

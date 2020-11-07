@@ -19,7 +19,7 @@
   * @param {external:Node} pin - связанный Пин.
   * @return {external:Node} element - разметка одной Карточки объявления с информацией и стилями.
   */
-  function setupCard(card, pin) {
+  const setupCard = (card, pin) => {
     let element = cardTemplate.cloneNode(true);
     element.querySelector(`.popup__avatar`).src = card.author.avatar;
     element.querySelector(`.popup__title`).textContent = card.offer.title;
@@ -29,7 +29,7 @@
     element.querySelector(`.popup__text--capacity`).textContent = `Комнат: ${card.offer.rooms}, кол-во спальных мест: ${card.offer.guests}`;
     element .querySelector(`.popup__text--time`).textContent = `Заезд после ${card.offer.checkin}, выезд до ${card.offer.checkout}`;
 
-    FEATURES.filter(function (feature) {
+    FEATURES.filter((feature) => {
       if (!card.offer.features.includes(feature)) {
         element.querySelector(`.popup__feature--${feature}`).remove();
       }
@@ -74,14 +74,14 @@
     document.addEventListener(`keydown`, popupButtonEscHandler);
 
     return element;
-  }
+  };
 
-  function removeCard() {
+  const removeCard = () => {
     const mapCard = document.querySelector(`.map__card`);
     if (mapCard) {
       close(mapCard);
     }
-  }
+  };
 
   window.card = {
     setupCard,

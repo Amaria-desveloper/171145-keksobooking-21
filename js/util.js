@@ -8,12 +8,8 @@
   * @return
   */
   const sizeOfElement = {
-    "getWidth": function (element) {
-      return element.offsetWidth;
-    },
-    "getHeight": function (element) {
-      return element.offsetHeight;
-    },
+    "getWidth": (element) => element.offsetWidth,
+    "getHeight": (element) => element.offsetHeight,
   };
 
 
@@ -25,7 +21,7 @@
   * @return {number}  getOffset.x - x-координата
   * @return {number}  getOffset.y - y-координата
   */
-  const getOffset = () => ({x: parseInt((sizeOfElement.getWidth.bind() / 2), 10), y: parseInt((sizeOfElement.getHeight.bind() / 2), 10)});
+  const getOffset = (element) => ({x: parseInt((sizeOfElement.getWidth(element) / 2), 10), y: parseInt((sizeOfElement.getHeight(element) / 2), 10)});
 
 
   /*
@@ -41,19 +37,15 @@
   *
   */
   const positionOfElement = {
-    "getTop": function (element) {
-      return parseInt(element.style.top, 10);
-    },
-    "getLeft": function (element) {
-      return parseInt(element.style.left, 10);
-    },
+    "getTop": (element) => parseInt(element.style.top, 10),
+    "getLeft": (element) => parseInt(element.style.left, 10),
   };
 
 
   /*
   * Координаты главной метки (по указателю)
   */
-  const getCoordinateOfPinMain = function () {
+  const getCoordinateOfPinMain = () => {
     let element = document.querySelector(`.map__pin--main`);
     const pinPointer = window.getComputedStyle(element, `::after`);
     const pinPointerWidth = parseInt(pinPointer.getPropertyValue(`border-top-width`), 10);
@@ -67,7 +59,7 @@
   /*
   * Координаты главной метки по её центру (в неактивном состоянии)
   */
-  const getCoordinateCenterOfPinMain = function (element) {
+  const getCoordinateCenterOfPinMain = (element) => {
     let positionX = positionOfElement.getLeft(element) + (sizeOfElement.getWidth(element) / 2);
     let positionY = positionOfElement.getTop(element) + Math.floor(sizeOfElement.getHeight(element) / 2);
 
@@ -85,12 +77,12 @@
   * Переключатель атрибута disabled
   */
   const makeDisabled = {
-    "set": function (element) {
+    "set": (element) => {
       for (let i = 0; i < element.length; i++) {
         element[i].setAttribute(`disabled`, true);
       }
     },
-    "remove": function (element) {
+    "remove": (element) => {
       for (let i = 0; i < element.length; i++) {
         element[i].removeAttribute(`disabled`, true);
       }
@@ -100,7 +92,7 @@
   /*
   * Разметка модального окна с ошибкой (при ошибки загрузки данных с сервера)
   */
-  const modalLayout = function (errorMessage) {
+  const modalLayout = (errorMessage) => {
     const node = document.createElement(`div`);
     node.id = `modal`;
     node.style = `z-index: 100; display: flex; justify-content: center; min-height: 50px; margin: auto; padding: 15px; background-color: white; border: 2px solid SkyBlue; border-radius: 10px`;

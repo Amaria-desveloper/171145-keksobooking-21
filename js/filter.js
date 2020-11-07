@@ -11,18 +11,18 @@
   const mapFiltersHousingGuests = mapFilter.querySelector(`.map__filters select[name="housing-guests"]`);
 
 
-  function makeFilter(data) {
-    function getValueChecked() {
+  const makeFilter = (data) => {
+    const getValueChecked = () => {
       let mapFilterHousingFeatures = mapFilter.querySelectorAll(`.map__filters .map__features input[name="features"]:checked`);
       let valueChecked = [];
-      Array.from(mapFilterHousingFeatures).map(function (feature) {
+      Array.from(mapFilterHousingFeatures).map((feature) => {
         valueChecked.push(feature.value);
       });
       return valueChecked;
-    }
+    };
 
 
-    function filteredChoosed() {
+    const filteredChoosed = () => {
       let pattern = {
         type: mapFiltersHousingType.value,
         price: {
@@ -59,17 +59,17 @@
       }
 
       return pattern;
-    }
+    };
 
 
     let pattern = filteredChoosed();
 
-    let availableAdverts = data.filter(function (datum) {
+    let availableAdverts = data.filter((datum) => {
       let condType = datum.offer.type === pattern.type || pattern.type === ``;
       let condPrice = datum.offer.price >= pattern.price.min && datum.offer.price < pattern.price.max;
       let condRooms = datum.offer.rooms === pattern.rooms || pattern.rooms === ``;
       let condGuests = datum.offer.guests === pattern.guests || pattern.guests === ``;
-      let condFeatures = pattern.features.every(function (feature) {
+      let condFeatures = pattern.features.every((feature) => {
         return datum.offer.features.includes(feature);
       });
 
@@ -77,7 +77,7 @@
     });
 
     return availableAdverts;
-  }
+  };
 
 
   window.filter = {
