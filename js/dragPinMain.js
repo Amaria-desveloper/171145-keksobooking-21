@@ -14,10 +14,10 @@
     TOP: 130,
     BOTTOM: 630,
     left: 0 - halfOfPinMain,
-    right: getWidth(map) - halfOfPinMain
+    right: getWidth(map) - halfOfPinMain,
   };
 
-  function checkNewPosition(property, currentPosition, limitedAreaStart, limitedAreaEnd) {
+  const checkNewPosition = function (property, currentPosition, limitedAreaStart, limitedAreaEnd) {
     if (currentPosition < limitedAreaStart) {
       mapPinMain.style[property] = limitedAreaStart + `px`;
     } else if (currentPosition > limitedAreaEnd) {
@@ -25,14 +25,14 @@
     } else {
       mapPinMain.style[property] = currentPosition + `px`;
     }
-  }
+  };
 
-  function mapPinMainStartDrag(evt) {
+  const mapPinMainStartDrag = function (evt) {
     evt.preventDefault();
 
     let startCoordinates = {
       x: evt.clientX,
-      y: evt.clientY
+      y: evt.clientY,
     };
 
     const mouseMoveHandler = function mouseMoveHandler(moveEvt) {
@@ -58,7 +58,7 @@
     };
 
 
-    const mouseUpHandler = function (upEvt) {
+    const mouseUpHandler = function mouseUpHandler(upEvt) {
       upEvt.preventDefault();
 
       const adFormAddress = window.variables.form.adFormAddress;
@@ -72,7 +72,7 @@
 
     document.addEventListener(`mousemove`, mouseMoveHandler);
     document.addEventListener(`mouseup`, mouseUpHandler);
-  }
+  };
 
 
   window.dragPinMain = mapPinMainStartDrag;
