@@ -114,7 +114,7 @@
 
     const priceHandlerBlur = function priceHandlerBlur(evt) {
       evt.preventDefault();
-      makeCheckInput((adFormPrice.value < TYPE_MIN_PRICE[value] || ``), (`Цена не менее ` + TYPE_MIN_PRICE[value]), (adFormType.value > 1000000), (`Цена не более 1 000 000`), adFormPrice);
+      makeCheckInput((adFormPrice.value < TYPE_MIN_PRICE[value] || ``), (`Цена не менее ${TYPE_MIN_PRICE[value]}`), (adFormType.value > 1000000), (`Цена не более 1 000 000`), adFormPrice);
     };
 
     adFormPrice.addEventListener(`blur`, priceHandlerBlur);
@@ -125,7 +125,7 @@
   const setCapacityValue = (selectedValue, selectedElement, setElement) => {
     makeCheckSelect((DEPENCE_ROOM_GUESTS[selectedValue].includes(Number(setElement.value), 0)), `выберите допустимое количество гостей`, setElement);
 
-    let selectedElementValue = selectedElement.querySelector(`option[value="` + [selectedValue] + `"]`);
+    let selectedElementValue = selectedElement.querySelector(`option[value="${selectedValue}"`);
     selectedElementValue.setAttribute(`selected`, `true`);
 
     for (let i = 0; i < setElement.length; i++) {
@@ -133,11 +133,11 @@
     }
 
     DEPENCE_ROOM_GUESTS[selectedValue].forEach((item) => {
-      setElement.querySelector(`option[value="` + item + `"]`).setAttribute(`style`, `display: auto`);
+      setElement.querySelector(`option[value="${item}"]`).setAttribute(`style`, `display: auto`);
     });
 
     const capacityChangeHandler = function capacityChangeHandler(evt) {
-      evt.target.querySelector(`option[value="` + [evt.target.value] + `"]`).setAttribute(`selected`, `true`);
+      evt.target.querySelector(`option[value="${evt.target.value}"]`).setAttribute(`selected`, `true`);
       setCapacityValue(selectedValue, selectedElement, setElement);
     };
 
