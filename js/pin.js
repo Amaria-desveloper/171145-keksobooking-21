@@ -105,6 +105,8 @@
     let advertsAll = data;
     let adverts = generateAvailablePins(advertsAll);
 
+    let initialAdverts = adverts.reverse();
+    mapPins.append(renderPins(initialAdverts, QUANTITY_PINS));
 
     const filterTypeChangeHandler = function filterTypeChangeHandler() {
       removeCurrentPins();
