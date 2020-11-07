@@ -114,7 +114,7 @@
 
     const priceHandlerBlur = function priceHandlerBlur(evt) {
       evt.preventDefault();
-      makeCheckInput((adFormType.value < TYPE_MIN_PRICE[value] || ``), (`Цена не менее ` + TYPE_MIN_PRICE[value]), (adFormType.value > 1000000), (`Цена не более 1 000 000`), adFormPrice);
+      makeCheckInput((adFormPrice.value < TYPE_MIN_PRICE[value] || ``), (`Цена не менее ` + TYPE_MIN_PRICE[value]), (adFormType.value > 1000000), (`Цена не более 1 000 000`), adFormPrice);
     };
 
     adFormPrice.addEventListener(`blur`, priceHandlerBlur);
