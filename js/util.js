@@ -66,7 +66,7 @@
     const pinPointerWidth = parseInt(pinPointer.getPropertyValue(`border-top-width`), 10);
 
     let positionX = Math.floor(positionOfElement.getLeft(element) + (sizeOfElement.getWidth(element) / 2));
-    let positionY = positionOfElement.getTop(element) + sizeOfElement.getHeight(element) + (pinPointerWidth / 2);
+    let positionY = Math.floor(positionOfElement.getTop(element) + sizeOfElement.getHeight(element) + (pinPointerWidth / 2));
 
     return [positionX + `, ` + positionY];
   }
