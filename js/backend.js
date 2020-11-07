@@ -16,7 +16,7 @@
   };
 
 
-  function createXHR(onSuccess, onError, method, url, data) {
+  const createXHR = function (onSuccess, onError, method, url, data) {
     const xhr = new XMLHttpRequest();
     xhr.responseType = `json`;
 
@@ -59,15 +59,15 @@
     });
 
     return xhr;
-  }
+  };
 
-  function load(onSuccess, onError) {
+  const load = function (onSuccess, onError) {
     createXHR(onSuccess, onError, `GET`, DATA_URL);
-  }
+  };
 
-  function save(onSuccess, onError, data) {
+  const save = function (onSuccess, onError, data) {
     createXHR(onSuccess, onError, `POST`, URL_POST, data);
-  }
+  };
 
   window.backend = {
     load,
