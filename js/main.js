@@ -2,32 +2,30 @@
 /*
 * Точка входа
 */
-(function () {
-  const removeCurrentPins = window.pin.removeCurrentPins;
-  const setInactive = window.map.setInactive;
-  const makeWork = window.map.makeWork;
+const removeCurrentPins = window.pin.removeCurrentPins;
+const setInactive = window.map.setInactive;
+const makeWork = window.map.makeWork;
 
-  /*
-  * при запуске
-  */
-  const setInitial = () => {
-    setInactive();
-    makeWork();
-  };
+/*
+* при запуске
+*/
+const setInitial = () => {
+  setInactive();
+  makeWork();
+};
 
-  /*
-  * Возвращает страницу в начальное состояние
-  */
-  const restartPage = () => {
-    removeCurrentPins();
-    setInitial();
-  };
-
-
+/*
+* Возвращает страницу в начальное состояние
+*/
+const restartPage = () => {
+  removeCurrentPins();
   setInitial();
+};
 
 
-  window.main = {
-    restartPage,
-  };
-})();
+setInitial();
+
+
+window.main = {
+  restartPage,
+};
