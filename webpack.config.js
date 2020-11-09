@@ -10,8 +10,8 @@ module.exports = {
     "./js/pin.js",
     "./js/notices.js",
     "./js/backend.js",
-    "./js/validateForm.js",
     "./js/form.js",
+    "./js/validateForm.js",
     "./js/dragPinMain.js",
     "./js/map.js",
     "./js/main.js"

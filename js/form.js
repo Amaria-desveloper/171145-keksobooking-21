@@ -16,6 +16,8 @@ const adFormTimeOut = document.querySelector(`#timeout`);
 const adFormAvatarPreview = document.querySelector(`.ad-form-header__preview img`);
 const adFormPhoto = document.querySelector(`.ad-form__photo`);
 const containerAdFormPhoto = document.querySelector(`.ad-form__photo-container`);
+
+
 const adFormButtonReset = document.querySelector(`.ad-form__reset`);
 
 
@@ -49,7 +51,6 @@ const installDefaultForm = () => {
   adFormAvatar.setAttribute(`accept`, `image/*`);
 
   adFormImages.setAttribute(`accept`, `image/*`);
-  adFormImages.multiple = true;
 };
 
 
@@ -66,31 +67,38 @@ const syncValues = (firstElement, secondElement) => {
 
 syncValues(adFormTimeIn, adFormTimeOut);
 
+/* Проверка типа загружаемого файла */
+const checkFileType = (preview) => {
+  const FILE_TYPES = [`gif`, `jpg`, `jpeg`, `png`];
+  const fileName = preview.name.toLowerCase();
+  let matches = FILE_TYPES.some((it) => {
+    return fileName.endsWith(it);
+  });
+
+  return matches;
+};
+
 
 /* показать превью аватара */
 const showAvatarPreview = (fileUploadElement) => {
-  adFormAvatarPreview.src = URL.createObjectURL(fileUploadElement.files[0]);
+  let preview = fileUploadElement.files[0];
+  let matches = checkFileType(preview);
+  if (matches) {
+    adFormAvatarPreview.src = URL.createObjectURL(preview);
+  }
 };
 
 
 /* Показать превью загруженных картинок */
 const showImagesPreview = (fileUploadElement) => {
-  let photo = document.createElement(`img`);
-  photo.setAttribute(`width`, `100%`);
-  photo.setAttribute(`height`, `100%`);
-  photo.src = URL.createObjectURL(fileUploadElement.files[0]);
-  adFormPhoto.appendChild(photo);
-
-  if (fileUploadElement.files.length > 1) {
-    let fragment = document.createDocumentFragment();
-    for (let i = 1; i < fileUploadElement.files.length; i++) {
-      let element = adFormPhoto.cloneNode(true);
-      photo.setAttribute(`width`, `100%`);
-      photo.setAttribute(`height`, `100%`);
-      photo.src = URL.createObjectURL(fileUploadElement.files[i]);
-      fragment.appendChild(element);
-    }
-    containerAdFormPhoto.appendChild(fragment);
+  let preview = fileUploadElement.files[0];
+  let matches = checkFileType(preview);
+  if (matches) {
+    let photo = document.createElement(`img`);
+    photo.setAttribute(`width`, `100%`);
+    photo.setAttribute(`height`, `100%`);
+    photo.src = URL.createObjectURL(preview);
+    adFormPhoto.appendChild(photo);
   }
 };
 
@@ -99,16 +107,10 @@ const showImagesPreview = (fileUploadElement) => {
 */
 const removeImagesPreview = () => {
   const loadedPhotos = containerAdFormPhoto.querySelectorAll(`img`);
-  const loadedPhotoWrappers = containerAdFormPhoto.querySelectorAll(`.ad-form__photo`);
 
   for (let photo of loadedPhotos) {
     closeElement(photo);
   }
-
-  for (let i = 1; i < loadedPhotoWrappers.length; i++) {
-    closeElement(loadedPhotoWrappers[i]);
-  }
-
   adFormAvatarPreview.src = `img/muffin-grey.svg`;
 };
 
