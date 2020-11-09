@@ -10,26 +10,24 @@
   /*
   * при запуске
   */
-  function setInitial() {
+  const setInitial = () => {
     setInactive();
     makeWork();
-  }
+  };
 
   /*
   * Возвращает страницу в начальное состояние
   */
-  function restartPage() {
+  const restartPage = () => {
     removeCurrentPins();
     setInitial();
-  }
+  };
 
 
   setInitial();
 
 
   window.main = {
-    restartPage
+    restartPage,
   };
-
-
 })();

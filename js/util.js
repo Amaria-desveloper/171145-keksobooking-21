@@ -8,12 +8,8 @@
   * @return
   */
   const sizeOfElement = {
-    "getWidth": function (element) {
-      return element.offsetWidth;
-    },
-    "getHeight": function (element) {
-      return element.offsetHeight;
-    }
+    "getWidth": (element) => element.offsetWidth,
+    "getHeight": (element) => element.offsetHeight,
   };
 
 
@@ -25,12 +21,7 @@
   * @return {number}  getOffset.x - x-координата
   * @return {number}  getOffset.y - y-координата
   */
-  function getOffset(element) {
-    return {
-      x: parseInt((sizeOfElement.getWidth(element) / 2), 10),
-      y: parseInt((sizeOfElement.getHeight(element) / 2), 10)
-    };
-  }
+  const getOffset = (element) => ({x: parseInt((sizeOfElement.getWidth(element) / 2), 10), y: parseInt((sizeOfElement.getHeight(element) / 2), 10)});
 
 
   /*
@@ -39,89 +30,69 @@
   * @return {string} TYPES[value] - в случае успеха возвращает свойство найденного ключа.
   * @return {string} `` - в случае неудачи возвращает пустую строку.
   */
-  function findElement(object, value) {
-    return object[value] || ``;
-  }
+  const findElement = (object, value) => object[value] || ``;
 
   /*
   * Найти координаты метки
   *
   */
   const positionOfElement = {
-    "getTop": function (element) {
-      return parseInt(element.style.top, 10);
-    },
-    "getLeft": function (element) {
-      return parseInt(element.style.left, 10);
-    }
+    "getTop": (element) => parseInt(element.style.top, 10),
+    "getLeft": (element) => parseInt(element.style.left, 10),
   };
 
 
   /*
   * Координаты главной метки (по указателю)
   */
-  function getCoordinateOfPinMain() {
+  const getCoordinateOfPinMain = () => {
     let element = document.querySelector(`.map__pin--main`);
     const pinPointer = window.getComputedStyle(element, `::after`);
     const pinPointerWidth = parseInt(pinPointer.getPropertyValue(`border-top-width`), 10);
 
     let positionX = Math.floor(positionOfElement.getLeft(element) + (sizeOfElement.getWidth(element) / 2));
-    let positionY = positionOfElement.getTop(element) + sizeOfElement.getHeight(element) + (pinPointerWidth / 2);
+    let positionY = Math.floor(positionOfElement.getTop(element) + sizeOfElement.getHeight(element) + (pinPointerWidth / 2));
 
     return [positionX + `, ` + positionY];
-  }
+  };
 
   /*
   * Координаты главной метки по её центру (в неактивном состоянии)
   */
-  function getCoordinateCenterOfPinMain(element) {
+  const getCoordinateCenterOfPinMain = (element) => {
     let positionX = positionOfElement.getLeft(element) + (sizeOfElement.getWidth(element) / 2);
     let positionY = positionOfElement.getTop(element) + Math.floor(sizeOfElement.getHeight(element) / 2);
 
     return [positionX + `, ` + positionY];
-  }
+  };
 
-
-  /*
-  * найти координаты типичного Пина куда указывает острый конец метки
-  */
-  function getPositionOfElement(element) {
-    let positionX =
-        positionOfElement.getTop(element) + sizeOfElement.getHeight(element);
-    let positionY =
-      positionOfElement.getLeft(element) + (sizeOfElement.getWidth(element) / 2);
-
-    return [positionX + `, ` + positionY];
-  }
 
   /*
   * Закрывает карточку. Удаляет узел из DOM.
   *
   */
-  function closeCard(element) {
-    element.remove();
-  }
+  const close = (element) => element.remove();
 
   /*
   * Переключатель атрибута disabled
   */
   const makeDisabled = {
-    "set": function (element) {
+    "set": (element) => {
       for (let i = 0; i < element.length; i++) {
         element[i].setAttribute(`disabled`, true);
       }
     },
-    "remove": function (element) {
+    "remove": (element) => {
       for (let i = 0; i < element.length; i++) {
         element[i].removeAttribute(`disabled`, true);
       }
-    }
+    },
   };
 
   /*
   * Разметка модального окна с ошибкой (при ошибки загрузки данных с сервера)
   */
-  function modalLayout(errorMessage) {
+  const modalLayout = (errorMessage) => {
     const node = document.createElement(`div`);
     node.id = `modal`;
     node.style = `z-index: 100; display: flex; justify-content: center; min-height: 50px; margin: auto; padding: 15px; background-color: white; border: 2px solid SkyBlue; border-radius: 10px`;
@@ -146,8 +117,22 @@
     node.appendChild(button);
 
     return node;
-  }
+  };
 
+
+  const debounce = (cb) => {
+    const TIMEOUT = 500;
+    let lastTimeout = null;
+
+    return (...parameters) => {
+      if (lastTimeout) {
+        window.clearTimeout(lastTimeout);
+      }
+      lastTimeout = window.setTimeout(() => {
+        cb(...parameters);
+      }, TIMEOUT);
+    };
+  };
 
   window.util = {
     sizeOfElement,
@@ -155,10 +140,9 @@
     findElement,
     getCoordinateOfPinMain,
     getCoordinateCenterOfPinMain,
-    getPositionOfElement,
-    closeCard,
+    close,
     makeDisabled,
-    modalLayout
+    modalLayout,
+    debounce,
   };
-
 })();

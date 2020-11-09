@@ -7,7 +7,7 @@
   const successDataHandler = window.notices.successDataHandler;
   const errorDataHandler = window.notices.errorDataHandler;
   const removeCard = window.card.removeCard;
-  const mapPinMainStartDrag = window.dragPinMain;
+  const mapPinMainMouseDownHandler = window.dragPinMain;
   const formReset = window.form.formReset;
   const installDefaultForm = window.form.installDefaultForm;
   const setAddressValue = window.form.setAddressValue;
@@ -24,11 +24,11 @@
 
   const backMapPinMain = {
     "left": mapPinMain.style.left,
-    "top": mapPinMain.style.top
+    "top": mapPinMain.style.top,
   };
 
 
-  function setActive() {
+  const setActive = () => {
     installDefaultForm();
     validateForm();
 
@@ -41,13 +41,13 @@
 
     load(successDataHandler, errorDataHandler);
 
-    mapPinMain.addEventListener(`mousedown`, mapPinMainStartDrag);
-  }
+    mapPinMain.addEventListener(`mousedown`, mapPinMainMouseDownHandler);
+  };
 
   /*
   * Устанавливает вёрстку в инициализирующее состояние.
   */
-  function setInactive() {
+  const setInactive = () => {
     map.classList.add(`map--faded`);
     adForm.classList.add(`ad-form--disabled`);
     formReset(adForm);
@@ -60,27 +60,26 @@
     mapPinMain.style.top = backMapPinMain.top;
 
     setAddressValue(adFormAddress, getCoordinateCenterOfPinMain(mapPinMain));
-  }
+  };
 
 
   /*
   * Активирует сайт по событию на Метке.
   */
-  function makeWork() {
+  const makeWork = () => {
 
-    const mapPinMainClickHandler = function (evt) {
+    const mapPinMainClickHandler = function mapPinMainClickHandler(evt) {
       evt.preventDefault();
       setActive();
       mapPinMain.removeEventListener(`click`, mapPinMainClickHandler);
     };
 
     mapPinMain.addEventListener(`click`, mapPinMainClickHandler);
-  }
+  };
 
 
   window.map = {
     setInactive,
     makeWork,
   };
-
 })();

@@ -14,10 +14,10 @@
     TOP: 130,
     BOTTOM: 630,
     left: 0 - halfOfPinMain,
-    right: getWidth(map) - halfOfPinMain
+    right: getWidth(map) - halfOfPinMain,
   };
 
-  function checkNewPosition(property, currentPosition, limitedAreaStart, limitedAreaEnd) {
+  const checkNewPosition = (property, currentPosition, limitedAreaStart, limitedAreaEnd) => {
     if (currentPosition < limitedAreaStart) {
       mapPinMain.style[property] = limitedAreaStart + `px`;
     } else if (currentPosition > limitedAreaEnd) {
@@ -25,32 +25,32 @@
     } else {
       mapPinMain.style[property] = currentPosition + `px`;
     }
-  }
+  };
 
-  function mapPinMainStartDrag(evt) {
+  const mapPinMainMouseDownHandler = function mapPinMainMouseDownHandler(evt) {
     evt.preventDefault();
 
     let startCoordinates = {
       x: evt.clientX,
-      y: evt.clientY
+      y: evt.clientY,
     };
 
-    const mouseMoveHandler = function (moveEvt) {
+    const mouseMoveHandler = function mouseMoveHandler(moveEvt) {
       moveEvt.preventDefault();
 
       const shift = {
         x: startCoordinates.x - moveEvt.clientX,
-        y: startCoordinates.y - moveEvt.clientY
+        y: startCoordinates.y - moveEvt.clientY,
       };
 
       startCoordinates = {
         x: moveEvt.clientX,
-        y: moveEvt.clientY
+        y: moveEvt.clientY,
       };
 
       const movedCoordinates = {
         x: mapPinMain.offsetLeft - shift.x,
-        y: mapPinMain.offsetTop - shift.y
+        y: mapPinMain.offsetTop - shift.y,
       };
 
       checkNewPosition(`left`, movedCoordinates.x, limitedArea.left, limitedArea.right);
@@ -58,7 +58,7 @@
     };
 
 
-    const mouseUpHandler = function (upEvt) {
+    const mouseUpHandler = function mouseUpHandler(upEvt) {
       upEvt.preventDefault();
 
       const adFormAddress = window.variables.form.adFormAddress;
@@ -72,9 +72,8 @@
 
     document.addEventListener(`mousemove`, mouseMoveHandler);
     document.addEventListener(`mouseup`, mouseUpHandler);
-  }
+  };
 
 
-  window.dragPinMain = mapPinMainStartDrag;
-
+  window.dragPinMain = mapPinMainMouseDownHandler;
 })();

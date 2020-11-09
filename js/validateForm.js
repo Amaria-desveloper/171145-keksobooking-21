@@ -26,12 +26,13 @@
   * @param {} message
   * @param {} element
   */
-  const makeCheckSelect = function (condition, message, element) {
-    let error = function () {
+  const makeCheckSelect = (condition, message, element) => {
+    let error = () => {
       element.setCustomValidity(message);
       element.reportValidity();
     };
-    let success = function () {
+
+    let success = () => {
       element.setCustomValidity(``);
     };
 
@@ -51,18 +52,18 @@
   * @param {} messageTwo
   * @param {} element - инпут, который проверяется.
   */
-  const makeCheckInput = function (conditionOne, messageOne, conditionTwo, messageTwo, element) {
-    let errorOne = function () {
+  const makeCheckInput = (conditionOne, messageOne, conditionTwo, messageTwo, element) => {
+    let errorOne = () => {
       element.setCustomValidity(messageOne);
       element.reportValidity();
     };
 
-    let errorTwo = function () {
+    let errorTwo = () => {
       element.setCustomValidity(messageTwo);
       element.reportValidity();
     };
 
-    let success = function () {
+    let success = () => {
       element.setCustomValidity(``);
     };
 
@@ -77,43 +78,43 @@
 
 
   /* отлов изменения поля Количество комнат. */
-  const roomNumberChangeHandler = function (evt) {
+  const roomNumberChangeHandler = function roomNumberChangeHandler(evt) {
     setCapacityValue(evt.target.value, evt.target, adFormCapacity);
   };
 
 
   /* отлов ввода текста в заголовок */
-  const titleHandlerInput = function (evt) {
+  const titleHandlerInput = function titleHandlerInput(evt) {
     makeCheckInput(evt.target.value.length < 30, `Заголовок объявления должен быть больше 30 символов`, evt.target.value.length > 100, `Заголовок объявления должен быть меньше 100 символов`, adFormTitle);
   };
 
 
   /* отлов изменение заголовка */
-  const avatarHandlerChange = function (evt) {
+  const avatarHandlerChange = function avatarHandlerChange(evt) {
     window.form.showAvatarPreview(evt.target);
   };
 
 
   /* отлов загрузки изображений */
-  const imagesHandlerChange = function (evt) {
+  const imagesHandlerChange = function imagesHandlerChange(evt) {
     window.form.showImagesPreview(evt.target);
   };
 
 
   /* отлов изменения поля Тип жилья */
-  const typeChangeHandler = function (evt) {
+  const typeChangeHandler = function typeChangeHandler(evt) {
     setPriceValue(evt.target.value, adFormPrice);
   };
 
 
   /* Устанавливает цену в плейсхолдер, проверяет введённую цену */
-  const setPriceValue = function (value, element) {
+  const setPriceValue = (value, element) => {
     element.setAttribute(`min`, TYPE_MIN_PRICE[value]);
     element.placeholder = TYPE_MIN_PRICE[value];
 
-    const priceHandlerBlur = function (evt) {
+    const priceHandlerBlur = function priceHandlerBlur(evt) {
       evt.preventDefault();
-      makeCheckInput((adFormType.value < TYPE_MIN_PRICE[value] || ``), (`Цена не менее ` + TYPE_MIN_PRICE[value]), (adFormType.value > 1000000), (`Цена не более 1 000 000`), adFormPrice);
+      makeCheckInput((adFormPrice.value < TYPE_MIN_PRICE[value] || ``), (`Цена не менее ${TYPE_MIN_PRICE[value]}`), (adFormType.value > 1000000), (`Цена не более 1 000 000`), adFormPrice);
     };
 
     adFormPrice.addEventListener(`blur`, priceHandlerBlur);
@@ -121,22 +122,22 @@
 
 
   /* Устанавливает вместимость кол-во гостей */
-  const setCapacityValue = function (selectedValue, selectedElement, setElement) {
+  const setCapacityValue = (selectedValue, selectedElement, setElement) => {
     makeCheckSelect((DEPENCE_ROOM_GUESTS[selectedValue].includes(Number(setElement.value), 0)), `выберите допустимое количество гостей`, setElement);
 
-    let selectedElementValue = selectedElement.querySelector(`option[value="` + [selectedValue] + `"]`);
+    let selectedElementValue = selectedElement.querySelector(`option[value="${selectedValue}"`);
     selectedElementValue.setAttribute(`selected`, `true`);
 
     for (let i = 0; i < setElement.length; i++) {
       setElement[i].setAttribute(`style`, `display: none`);
     }
 
-    DEPENCE_ROOM_GUESTS[selectedValue].forEach(function (item) {
-      setElement.querySelector(`option[value="` + item + `"]`).setAttribute(`style`, `display: auto`);
+    DEPENCE_ROOM_GUESTS[selectedValue].forEach((item) => {
+      setElement.querySelector(`option[value="${item}"]`).setAttribute(`style`, `display: auto`);
     });
 
-    const capacityChangeHandler = function (evt) {
-      evt.target.querySelector(`option[value="` + [evt.target.value] + `"]`).setAttribute(`selected`, `true`);
+    const capacityChangeHandler = function capacityChangeHandler(evt) {
+      evt.target.querySelector(`option[value="${evt.target.value}"]`).setAttribute(`selected`, `true`);
       setCapacityValue(selectedValue, selectedElement, setElement);
     };
 
@@ -147,24 +148,23 @@
   /*
   * Слушает форму
   */
-  const submitHandler = function (evt) {
-    save(new FormData(adForm), sendIsSuccess, sendIsError);
+  const submitHandler = function submitHandler(evt) {
+    save(sendIsSuccess, sendIsError, new FormData(adForm));
     evt.preventDefault();
   };
 
-  function validate() {
+  const validate = () => {
     adFormRoomNumber.addEventListener(`change`, roomNumberChangeHandler);
     adFormTitle.addEventListener(`input`, titleHandlerInput);
     adFormType.addEventListener(`change`, typeChangeHandler);
     adFormAvatar.addEventListener(`change`, avatarHandlerChange);
     adFormImages.addEventListener(`change`, imagesHandlerChange);
-  }
+  };
 
   adForm.addEventListener(`submit`, submitHandler);
 
 
   window.validateForm = {
-    validate
+    validate,
   };
-
 })();
