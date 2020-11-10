@@ -6,6 +6,10 @@ const TYPE_MIN_PRICE = window.constants.TYPE_MIN_PRICE;
 const save = window.backend.save;
 const sendIsSuccess = window.notices.sendIsSuccess;
 const sendIsError = window.notices.sendIsError;
+const showAvatarPreview = window.form.showAvatarPreview;
+const showImagesPreview = window.form.showImagesPreview;
+
+const DEPENCE_ROOM_GUESTS = window.constants.DEPENCE_ROOM_GUESTS;
 
 const adForm = window.variables.form.adForm;
 const adFormAvatar = window.variables.form.adFormAvatar;
@@ -13,10 +17,9 @@ const adFormType = window.variables.form.adFormType;
 const adFormPrice = window.variables.form.adFormPrice;
 const adFormCapacity = window.variables.form.adFormCapacity;
 const adFormImages = window.variables.form.adFormImages;
+const adFormRoomNumber = window.variables.form.adFormRoomNumber;
 
 const adFormTitle = document.querySelector(`#title`);
-const adFormRoomNumber = window.variables.form.adFormRoomNumber;
-const DEPENCE_ROOM_GUESTS = window.constants.DEPENCE_ROOM_GUESTS;
 
 
 /*
@@ -90,13 +93,13 @@ const titleHandlerInput = function titleHandlerInput(evt) {
 
 /* отлов изменение заголовка */
 const avatarHandlerChange = function avatarHandlerChange(evt) {
-  window.form.showAvatarPreview(evt.target);
+  showAvatarPreview(evt.target);
 };
 
 
 /* отлов загрузки изображений */
 const imagesHandlerChange = function imagesHandlerChange(evt) {
-  window.form.showImagesPreview(evt.target);
+  showImagesPreview(evt.target);
 };
 
 
