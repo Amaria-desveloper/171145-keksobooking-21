@@ -15,9 +15,6 @@ const adFormTimeIn = document.querySelector(`#timein`);
 const adFormTimeOut = document.querySelector(`#timeout`);
 const adFormAvatarPreview = document.querySelector(`.ad-form-header__preview img`);
 const adFormPhoto = document.querySelector(`.ad-form__photo`);
-const containerAdFormPhoto = document.querySelector(`.ad-form__photo-container`);
-
-
 const adFormButtonReset = document.querySelector(`.ad-form__reset`);
 
 
@@ -69,15 +66,17 @@ syncValues(adFormTimeIn, adFormTimeOut);
 
 /* Проверка типа загружаемого файла */
 const checkFileType = (preview) => {
-  const FILE_TYPES = [`gif`, `jpg`, `jpeg`, `png`];
-  const fileName = preview.name.toLowerCase();
-  let matches = FILE_TYPES.some((it) => {
-    return fileName.endsWith(it);
-  });
-
-  return matches;
+  const FILE_TYPES = [`image/gif`, `image/jpg`, `image/jpeg`, `image/png`];
+  return FILE_TYPES.includes(preview[`type`]);
 };
 
+const createImageBox = (photo) => {
+  let imageBox = document.createElement(`img`);
+  imageBox.setAttribute(`width`, `100%`);
+  imageBox.setAttribute(`height`, `100%`);
+  imageBox.src = URL.createObjectURL(photo);
+  return imageBox;
+};
 
 /* показать превью аватара */
 const showAvatarPreview = (fileUploadElement) => {
@@ -93,12 +92,14 @@ const showAvatarPreview = (fileUploadElement) => {
 const showImagesPreview = (fileUploadElement) => {
   let preview = fileUploadElement.files[0];
   let matches = checkFileType(preview);
+  let imageBox = adFormPhoto.querySelector(`img`);
+
   if (matches) {
-    let photo = document.createElement(`img`);
-    photo.setAttribute(`width`, `100%`);
-    photo.setAttribute(`height`, `100%`);
-    photo.src = URL.createObjectURL(preview);
-    adFormPhoto.appendChild(photo);
+    if (!imageBox) {
+      adFormPhoto.appendChild(createImageBox(preview));
+    } else {
+      imageBox.src = URL.createObjectURL(preview);
+    }
   }
 };
 
@@ -106,11 +107,12 @@ const showImagesPreview = (fileUploadElement) => {
 * Сбросить превью загруженных фото
 */
 const removeImagesPreview = () => {
-  const loadedPhotos = containerAdFormPhoto.querySelectorAll(`img`);
+  const loadedPhoto = adFormPhoto.querySelector(`img`);
 
-  for (let photo of loadedPhotos) {
-    closeElement(photo);
+  if (loadedPhoto) {
+    closeElement(loadedPhoto);
   }
+
   adFormAvatarPreview.src = `img/muffin-grey.svg`;
 };
 
