@@ -15,7 +15,7 @@ const StatusCode = {
 };
 
 
-const createXHR = function (onSuccess, onError, method, url, data) {
+const createXHR = (onSuccess, onError, method, url, data) => {
   const xhr = new XMLHttpRequest();
   xhr.responseType = `json`;
 
@@ -23,7 +23,7 @@ const createXHR = function (onSuccess, onError, method, url, data) {
   xhr.open(method, url);
   xhr.send(data);
 
-  xhr.addEventListener(`load`, function () {
+  xhr.addEventListener(`load`, () => {
     let error = ``;
     switch (xhr.status) {
       case StatusCode.OK:
@@ -49,22 +49,22 @@ const createXHR = function (onSuccess, onError, method, url, data) {
     }
   });
 
-  xhr.addEventListener(`error`, function () {
+  xhr.addEventListener(`error`, () => {
     onError(`Произошла ошибка соединения`);
   });
 
-  xhr.addEventListener(`timeout`, function () {
+  xhr.addEventListener(`timeout`, () => {
     onError(`Запрос не успел выполниться за ${TIMEOUT} мс`);
   });
 
   return xhr;
 };
 
-const load = function (onSuccess, onError) {
+const load = (onSuccess, onError) => {
   createXHR(onSuccess, onError, `GET`, DATA_URL);
 };
 
-const save = function (onSuccess, onError, data) {
+const save = (onSuccess, onError, data) => {
   createXHR(onSuccess, onError, `POST`, URL_POST, data);
 };
 

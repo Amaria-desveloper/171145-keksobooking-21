@@ -67,7 +67,7 @@ const setInactive = () => {
 */
 const makeWork = () => {
 
-  const mapPinMainClickHandler = function mapPinMainClickHandler(evt) {
+  const mapPinMainClickHandler = (evt) => {
     evt.preventDefault();
     setActive();
     mapPinMain.removeEventListener(`click`, mapPinMainClickHandler);

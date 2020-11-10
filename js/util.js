@@ -58,8 +58,8 @@ const getCoordinateOfPinMain = () => {
 * Координаты главной метки по её центру (в неактивном состоянии)
 */
 const getCoordinateCenterOfPinMain = (element) => {
-  let positionX = positionOfElement.getLeft(element) + (sizeOfElement.getWidth(element) / 2);
-  let positionY = positionOfElement.getTop(element) + Math.floor(sizeOfElement.getHeight(element) / 2);
+  let positionX = Math.floor(positionOfElement.getLeft(element) + (sizeOfElement.getWidth(element) / 2));
+  let positionY = Math.floor(positionOfElement.getTop(element) + (sizeOfElement.getHeight(element) / 2));
 
   return [positionX + `, ` + positionY];
 };

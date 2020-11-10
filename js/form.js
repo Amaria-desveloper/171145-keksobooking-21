@@ -53,11 +53,11 @@ const installDefaultForm = () => {
 
 /* синхронизация значений полей Время заезда и выезда */
 const syncValues = (firstElement, secondElement) => {
-  firstElement.addEventListener(`change`, function () {
+  firstElement.addEventListener(`change`, () => {
     secondElement.value = firstElement.value;
   });
 
-  secondElement.addEventListener(`change`, function () {
+  secondElement.addEventListener(`change`, () => {
     firstElement.value = secondElement.value;
   });
 };
@@ -127,7 +127,7 @@ const formReset = (form) => {
 };
 
 
-const formButtonResetHandler = function formButtonResetHandler(evt) {
+const formButtonResetHandler = (evt) => {
   evt.preventDefault();
   formReset(adForm);
   window.main.restartPage();

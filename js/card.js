@@ -56,12 +56,12 @@ const setupCard = (card, pin) => {
     }
   }
 
-  const popupButtonCloseClickHandler = function popupButtonCloseClickHandler() {
+  const popupButtonCloseClickHandler = () => {
     closeElement(element);
     pin.classList.remove(`map__pin--active`);
   };
 
-  const popupButtonEscHandler = function popupButtonEscHandler(evt) {
+  const popupButtonEscHandler = (evt) => {
     if (evt.key === `Escape`) {
       evt.preventDefault();
       closeElement(element);

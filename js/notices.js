@@ -28,12 +28,12 @@ const errorDataHandler = (errorMessage) => {
   const button = document.querySelector(`#modalButton`);
   button.focus();
 
-  const buttonClickHandler = function buttonClickHandler(evt) {
+  const buttonClickHandler = (evt) => {
     evt.preventDefault();
     closeElement(modal);
   };
 
-  const buttonEscHandler = function buttonEscHandler(evt) {
+  const buttonEscHandler = (evt) => {
     if (evt.key === `Escape`) {
       evt.preventDefault();
       closeElement(modal);
@@ -72,7 +72,7 @@ const messageCloseClickHandler = () => {
 /*
 * Ловит esc на закрытие модального окна
 */
-const messageCloseEscHandler = function messageCloseEscHandler(evt) {
+const messageCloseEscHandler = (evt) => {
   if (evt.key === `Escape`) {
     evt.preventDefault();
     messageCloseClickHandler();

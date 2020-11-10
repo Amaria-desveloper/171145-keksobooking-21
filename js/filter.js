@@ -8,6 +8,10 @@ const mapFiltersHousingType = mapFilter.querySelector(`select[name="housing-type
 const mapFiltersHousingPrice = mapFilter.querySelector(`.map__filters select[name="housing-price"]`);
 const mapFiltersHousingRooms = mapFilter.querySelector(`.map__filters select[name="housing-rooms"]`);
 const mapFiltersHousingGuests = mapFilter.querySelector(`.map__filters select[name="housing-guests"]`);
+const FilterLimit = {
+  MIN: 10000,
+  MAX: 50000,
+};
 
 
 const makeFilter = (data) => {
@@ -40,12 +44,12 @@ const makeFilter = (data) => {
 
     if (mapFiltersHousingPrice.value !== `any`) {
       if (mapFiltersHousingPrice.value === `low`) {
-        pattern.price.max = 10000;
+        pattern.price.max = FilterLimit.MIN;
       } else if (mapFiltersHousingPrice.value === `middle`) {
-        pattern.price.min = 10000;
-        pattern.price.max = 50000;
+        pattern.price.min = FilterLimit.MIN;
+        pattern.price.max = FilterLimit.MAX;
       } else {
-        pattern.price.min = 50000;
+        pattern.price.min = FilterLimit.MAX;
       }
     }
 
@@ -63,7 +67,7 @@ const makeFilter = (data) => {
 
   let pattern = filteredChoosed();
 
-  let availableAdverts = data.filter((datum) => {
+  return data.filter((datum) => {
     let condType = datum.offer.type === pattern.type || pattern.type === ``;
     let condPrice = datum.offer.price >= pattern.price.min && datum.offer.price < pattern.price.max;
     let condRooms = datum.offer.rooms === pattern.rooms || pattern.rooms === ``;
@@ -74,8 +78,6 @@ const makeFilter = (data) => {
 
     return condType && condPrice && condRooms && condGuests && condFeatures;
   });
-
-  return availableAdverts;
 };
 
 

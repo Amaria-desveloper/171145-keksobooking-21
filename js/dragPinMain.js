@@ -26,7 +26,7 @@ const checkNewPosition = (property, currentPosition, limitedAreaStart, limitedAr
   }
 };
 
-const mapPinMainMouseDownHandler = function mapPinMainMouseDownHandler(evt) {
+const mapPinMainMouseDownHandler = (evt) => {
   evt.preventDefault();
 
   let startCoordinates = {
@@ -34,7 +34,7 @@ const mapPinMainMouseDownHandler = function mapPinMainMouseDownHandler(evt) {
     y: evt.clientY,
   };
 
-  const mouseMoveHandler = function mouseMoveHandler(moveEvt) {
+  const mouseMoveHandler = (moveEvt) => {
     moveEvt.preventDefault();
 
     const shift = {
@@ -57,7 +57,7 @@ const mapPinMainMouseDownHandler = function mapPinMainMouseDownHandler(evt) {
   };
 
 
-  const mouseUpHandler = function mouseUpHandler(upEvt) {
+  const mouseUpHandler = (upEvt) => {
     upEvt.preventDefault();
 
     const adFormAddress = window.variables.form.adFormAddress;

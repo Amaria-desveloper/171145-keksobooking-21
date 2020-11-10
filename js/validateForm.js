@@ -9,7 +9,7 @@ const sendIsError = window.notices.sendIsError;
 const showAvatarPreview = window.form.showAvatarPreview;
 const showImagesPreview = window.form.showImagesPreview;
 
-const DEPENCE_ROOM_GUESTS = window.constants.DEPENCE_ROOM_GUESTS;
+const DEPENDS_ROOM_GUESTS = window.constants.DEPENDS_ROOM_GUESTS;
 
 const adForm = window.variables.form.adForm;
 const adFormAvatar = window.variables.form.adFormAvatar;
@@ -80,31 +80,31 @@ const makeCheckInput = (conditionOne, messageOne, conditionTwo, messageTwo, elem
 
 
 /* отлов изменения поля Количество комнат. */
-const roomNumberChangeHandler = function roomNumberChangeHandler(evt) {
+const roomNumberChangeHandler = (evt) => {
   setCapacityValue(evt.target.value, evt.target, adFormCapacity);
 };
 
 
 /* отлов ввода текста в заголовок */
-const titleHandlerInput = function titleHandlerInput(evt) {
+const titleHandlerInput = (evt) => {
   makeCheckInput(evt.target.value.length < 30, `Заголовок объявления должен быть больше 30 символов`, evt.target.value.length > 100, `Заголовок объявления должен быть меньше 100 символов`, adFormTitle);
 };
 
 
 /* отлов изменение заголовка */
-const avatarHandlerChange = function avatarHandlerChange(evt) {
+const avatarHandlerChange = (evt) => {
   showAvatarPreview(evt.target);
 };
 
 
 /* отлов загрузки изображений */
-const imagesHandlerChange = function imagesHandlerChange(evt) {
+const imagesHandlerChange = (evt) => {
   showImagesPreview(evt.target);
 };
 
 
 /* отлов изменения поля Тип жилья */
-const typeChangeHandler = function typeChangeHandler(evt) {
+const typeChangeHandler = (evt) => {
   setPriceValue(evt.target.value, adFormPrice);
 };
 
@@ -114,7 +114,7 @@ const setPriceValue = (value, element) => {
   element.setAttribute(`min`, TYPE_MIN_PRICE[value]);
   element.placeholder = TYPE_MIN_PRICE[value];
 
-  const priceHandlerBlur = function priceHandlerBlur(evt) {
+  const priceHandlerBlur = (evt) => {
     evt.preventDefault();
     makeCheckInput((adFormPrice.value < TYPE_MIN_PRICE[value] || ``), (`Цена не менее ${TYPE_MIN_PRICE[value]}`), (adFormType.value > 1000000), (`Цена не более 1 000 000`), adFormPrice);
   };
@@ -125,7 +125,7 @@ const setPriceValue = (value, element) => {
 
 /* Устанавливает вместимость кол-во гостей */
 const setCapacityValue = (selectedValue, selectedElement, setElement) => {
-  makeCheckSelect((DEPENCE_ROOM_GUESTS[selectedValue].includes(Number(setElement.value), 0)), `выберите допустимое количество гостей`, setElement);
+  makeCheckSelect((DEPENDS_ROOM_GUESTS[selectedValue].includes(Number(setElement.value), 0)), `выберите допустимое количество гостей`, setElement);
 
   let selectedElementValue = selectedElement.querySelector(`option[value="${selectedValue}"`);
   selectedElementValue.setAttribute(`selected`, `true`);
@@ -134,11 +134,11 @@ const setCapacityValue = (selectedValue, selectedElement, setElement) => {
     setElement[i].setAttribute(`style`, `display: none`);
   }
 
-  DEPENCE_ROOM_GUESTS[selectedValue].forEach((item) => {
+  DEPENDS_ROOM_GUESTS[selectedValue].forEach((item) => {
     setElement.querySelector(`option[value="${item}"]`).setAttribute(`style`, `display: auto`);
   });
 
-  const capacityChangeHandler = function capacityChangeHandler(evt) {
+  const capacityChangeHandler = (evt) => {
     evt.target.querySelector(`option[value="${evt.target.value}"]`).setAttribute(`selected`, `true`);
     setCapacityValue(selectedValue, selectedElement, setElement);
   };
@@ -150,7 +150,7 @@ const setCapacityValue = (selectedValue, selectedElement, setElement) => {
 /*
 * Слушает форму
 */
-const submitHandler = function submitHandler(evt) {
+const submitHandler = (evt) => {
   save(sendIsSuccess, sendIsError, new FormData(adForm));
   evt.preventDefault();
 };

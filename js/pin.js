@@ -28,7 +28,7 @@ const setupPin = (data, index) => {
   element.style.left = data[index].location.x + `px`;
   element.style.top = data[index].location.y + `px`;
 
-  element.addEventListener(`click`, function () {
+  element.addEventListener(`click`, () => {
     pinChoiceClickHandler(data[index], element);
   });
 
@@ -41,7 +41,7 @@ const setupPin = (data, index) => {
 * @param {} element - переданный текущий Пин.
 * @param {Object} card - Объект с данными для карточки объявления.
 */
-const pinChoiceClickHandler = function pinChoiceClickHandler(card, element) {
+const pinChoiceClickHandler = (card, element) => {
   let mapCard = document.querySelector(`.map__card`);
   if (mapCard !== null) {
     closeElement(mapCard);
@@ -101,14 +101,12 @@ const removeCurrentPins = () => {
 * Добавляет Пины на карту
 */
 const addPinOnMap = (data) => {
-
-  let advertsAll = data;
-  let adverts = generateAvailablePins(advertsAll);
+  let adverts = generateAvailablePins(data);
 
   let initialAdverts = adverts.reverse();
   mapPins.append(renderPins(initialAdverts, QUANTITY_PINS));
 
-  const filterTypeChangeHandler = function filterTypeChangeHandler() {
+  const filterTypeChangeHandler = () => {
     removeCurrentPins();
     removeCard();
 
